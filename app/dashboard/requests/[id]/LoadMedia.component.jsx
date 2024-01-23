@@ -46,7 +46,7 @@ const LoadMedia = ({ mediaId }) => {
           {images.map((url, index) => (
             <Col key={index}>
               <Flex dir="vertical" justifyContent="center" className="h-full">
-                <Image alt="image" src={url} className="w-full rounded-xl" />
+                <img alt="image" src={url} className="w-full rounded-xl" />
               </Flex>
             </Col>
           ))}

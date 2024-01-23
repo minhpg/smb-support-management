@@ -21,16 +21,18 @@ export async function middleware(req) {
       .eq("id", user.id)
       .single();
 
-    if (!userProfile) {
-      await supabase.from("users").upsert({
-        id: user.id,
-        email: user.email,
-      });
-      return NextResponse.redirect(new URL("/dashboard/verified", req.url));
-    }
+    if (req.nextUrl.pathname !== "/dashboard/verified") {
+      if (!userProfile) {
+        await supabase.from("users").upsert({
+          id: user.id,
+          email: user.email,
+        });
+        return NextResponse.redirect(new URL("/dashboard/verified", req.url));
+      }
 
-    if (!userProfile.verified) {
-      return NextResponse.redirect(new URL("/dashboard/verified", req.url));
+      if (!userProfile.verified) {
+        return NextResponse.redirect(new URL("/dashboard/verified", req.url));
+      }
     }
 
     if (req.nextUrl.pathname !== "/dashboard/unauthorized") {

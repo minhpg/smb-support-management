@@ -81,7 +81,7 @@ const useCreateUpdate = (supabase, requestId) => {
     formData.append("text", text);
     formData.append(
       "deadline",
-      deadline ? deadline.toISOString().replace("T", " ").replace("Z", "") : "",
+      deadline ? deadline.toISOString().replace("T", " ").replace("Z", "") : ""
     );
     formData.append("equipment_request", attachRequestItems);
 
@@ -254,7 +254,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
                                     justifyContent="center"
                                     className="h-full"
                                   >
-                                    <Image
+                                    <image
                                       alt="preview"
                                       src={preview}
                                       className="w-full rounded-xl"
