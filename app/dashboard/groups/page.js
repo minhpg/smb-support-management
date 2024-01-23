@@ -28,7 +28,7 @@ const DashboardGroupsPage = async () => {
           <Button variant="light">Create group</Button>
         </Link>
       </Flex>
-      <Card className="mt-6"></Card>
+      {/* <Card className="mt-6"></Card> */}
       <Card className="mt-6">
         <Table>
           <TableHead>
@@ -40,7 +40,7 @@ const DashboardGroupsPage = async () => {
           </TableHead>
           <TableBody>
             {groups.map((group) => (
-              <TableRow>
+              <TableRow key={group.id}>
                 <TableCell>{group.name}</TableCell>
                 <TableCell>
                   {group.campus ? group.campus.name : "None"}

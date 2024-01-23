@@ -26,6 +26,7 @@ import useUpdateTypes from "@/hooks/useUpdateTypes.hook";
 import usePreviews from "@/hooks/usePreviews.hook";
 import createUpdateFormAction from "./createUpdateFormAction";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const useCreateUpdate = (supabase, requestId) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +51,7 @@ const useCreateUpdate = (supabase, requestId) => {
           setUpdateType(data);
         });
     }
-  }, [selectedType]);
+  }, [selectedType, supabase]);
 
   useEffect(() => {
     if (updateType) {
@@ -66,7 +67,7 @@ const useCreateUpdate = (supabase, requestId) => {
           });
       }
     }
-  }, [updateType, selectedType]);
+  }, [updateType, selectedType, supabase]);
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -148,7 +149,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
 
   useEffect(() => {
     setMediaFiles(selectedFiles);
-  }, [selectedFiles]);
+  }, [selectedFiles, setMediaFiles]);
 
   return (
     <>
@@ -253,7 +254,8 @@ const CreateUpdate = ({ requestId, campusId }) => {
                                     justifyContent="center"
                                     className="h-full"
                                   >
-                                    <img
+                                    <Image
+                                      alt="preview"
                                       src={preview}
                                       className="w-full rounded-xl"
                                     />
@@ -386,7 +388,7 @@ const SelectRequestItemList = ({ requestId, setAttachRequestItems }) => {
       .then(({ data: equipmentLists }) => {
         setLists(equipmentLists);
       });
-  }, []);
+  }, [supabase, requestId]);
 
   useEffect(() => {
     const loadItemsAsync = async () => {
@@ -400,7 +402,7 @@ const SelectRequestItemList = ({ requestId, setAttachRequestItems }) => {
     if (list) {
       loadItemsAsync();
     }
-  }, [list]);
+  }, [list, supabase]);
 
   return (
     <>

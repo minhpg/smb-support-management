@@ -23,7 +23,7 @@ const LoadApprovals = ({ updateId }) => {
       setLoading(false);
     };
     loadItemsAsync();
-  }, []);
+  }, [supabase, updateId]);
 
   return (
     <>

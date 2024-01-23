@@ -5,7 +5,7 @@ const Logo = () => {
   return (
     <Link href="/dashboard">
       <div className="flex justify-start gap-3">
-        <Image src="/logo.png" width={44} height={48} />
+        <Image src="/logo.png" width={44} height={48} alt="logo" />
         <div className="font-semibold">
           <div>
             MapleBear<span className="text-red-600">Sunshine</span>

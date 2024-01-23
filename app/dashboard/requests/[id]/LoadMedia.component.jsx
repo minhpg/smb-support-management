@@ -2,6 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button, Col, Flex, Grid, Text } from "@tremor/react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const LoadMedia = ({ mediaId }) => {
@@ -45,7 +46,7 @@ const LoadMedia = ({ mediaId }) => {
           {images.map((url, index) => (
             <Col key={index}>
               <Flex dir="vertical" justifyContent="center" className="h-full">
-                <img src={url} className="w-full rounded-xl" />
+                <Image alt="image" src={url} className="w-full rounded-xl" />
               </Flex>
             </Col>
           ))}

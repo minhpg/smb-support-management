@@ -43,7 +43,7 @@ const DashboardAwaitVerificationPage = async () => {
       <div className="flex-1 flex flex-col justify-center">
         <div className="flex justify-center">
           <div>
-            <Title>Waiting for administrator's verificaton</Title>
+            <Title>{"Waiting for administrator's verificaton"}</Title>
             <Text>
               Please wait while your account is being verified by system
               administrator
