@@ -20,7 +20,7 @@ const AuthForm = () => {
             theme="light"
             showLinks={false}
             providers={[]}
-            redirectTo={`${NEXT_PUBLIC_APP_URL}/auth/callback`}
+            redirectTo={`${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`}
           />
         </div>
       </div>
