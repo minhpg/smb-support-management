@@ -16,13 +16,55 @@ import {
 import RequestStatus from "@/app/dashboard/requests/RequestStatus.component";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton.component";
+import RequestFilters from "./RequestFilters.component";
+import getUserProfile from "@/supabase/getUserProfile";
 
-const DashboardRequestsPage = async () => {
-  const { supabase } = await getSession();
-  const { data: requests } = await supabase
+const DashboardRequestsPage = async ({ searchParams }) => {
+  const { supabase, user } = await getUserProfile();
+  const permissionLevel = user.role.permission_level;
+  let query = supabase
     .from("requests")
     .select("*, campus (name), from (id, first_name, last_name)");
-  console.log(requests);
+
+  if (permissionLevel == "USER") {
+    query = query.eq("from", user.id);
+  }
+
+  if (searchParams.order && searchParams.order_by) {
+    if (searchParams.order == "asc") {
+      query.order(searchParams.order_by, {
+        ascending: true,
+      });
+    }
+    if (searchParams.order == "desc") {
+      query.order(searchParams.order_by, {
+        ascending: false,
+      });
+    }
+  }
+
+  if (searchParams.status) {
+    if (searchParams.status == "pending") {
+      query.eq("completed", false).eq("rejected", false);
+    }
+    if (searchParams.status == "completed") {
+      query.eq("completed", true).eq("rejected", false);
+    }
+    if (searchParams.status == "rejected") {
+      query.eq("completed", false).eq("rejected", true);
+    }
+  }
+
+  if (searchParams.priority) {
+    query.eq("priority", searchParams.priority);
+  }
+
+  // if(searchParams.group){
+  //   query.eq('group', searchParams.group)
+  // }
+
+  const { data: requests, error } = await query;
+
   return (
     <>
       <Flex>
@@ -31,7 +73,7 @@ const DashboardRequestsPage = async () => {
           <Button variant="light">Create request</Button>
         </Link>
       </Flex>
-      <Card className="mt-6"></Card>
+      <RequestFilters searchParams={searchParams} />
       <Card className="mt-6">
         <Table>
           <TableHead>
@@ -53,7 +95,9 @@ const DashboardRequestsPage = async () => {
                     <Button variant="light">{request.title}</Button>
                   </Link>
                 </TableCell>
-                <TableCell>{new Date(request.created_at).toLocaleString()}</TableCell>
+                <TableCell>
+                  {new Date(request.created_at).toLocaleString()}
+                </TableCell>
                 <TableCell>
                   <Link href={`/dashboard/users/${request.from.id}`}>
                     <Button variant="light">
@@ -81,7 +125,7 @@ const DashboardRequestsPage = async () => {
                   {request.campus ? request.campus.name : "No campus assigned"}
                 </TableCell>
                 <TableCell>
-                  <DeleteButton requestId={request.id}/>
+                  <DeleteButton requestId={request.id} />
                 </TableCell>
               </TableRow>
             ))}

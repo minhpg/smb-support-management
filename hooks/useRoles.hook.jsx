@@ -8,7 +8,6 @@ const useRoles = (supabase) => {
       .from("roles")
       .select("*")
       .then(({ data }) => {
-        console.log(data);
         setCampuses(data);
       });
   }, []);

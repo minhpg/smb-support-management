@@ -4,6 +4,7 @@ import useCampuses from "@/hooks/useCampuses.hook";
 import useRoles from "@/hooks/useRoles.hook";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
+  Badge,
   Button,
   Card,
   Col,
@@ -15,6 +16,7 @@ import {
   TextInput,
   Title,
 } from "@tremor/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const UserForm = ({ user }) => {
@@ -23,6 +25,7 @@ const UserForm = ({ user }) => {
   const [saved, setSaved] = useState(true);
   const campuses = useCampuses(supabase);
   const roles = useRoles(supabase);
+  const router = useRouter();
 
   const onSubmit = async (event) => {
     setSaved(false);
@@ -36,16 +39,42 @@ const UserForm = ({ user }) => {
     formData.forEach((value, key) => {
       formDataObj[key] = value.length > 0 ? value : null;
     });
-    console.log(formDataObj);
     await supabase.from("users").upsert(formDataObj);
     setSaved(true);
+  };
+
+  const revokeVerification = async () => {
+    setSaved(false);
+    await supabase.from("users").upsert({
+      id: user.id,
+      verified: false,
+    });
+    setSaved(true);
+    router.refresh();
+  };
+
+  const handleVerify = async () => {
+    setSaved(false);
+    await supabase.from("users").upsert({
+      id: user.id,
+      verified: true,
+    });
+    setSaved(true);
+    router.refresh();
   };
 
   return (
     <>
       <Card>
         <Flex>
-          <Title>User {user.id}</Title>
+          <Flex className="gap-3" justifyContent="start">
+            <Title>User {user.id}</Title>
+            {user.verified ? (
+              <Badge color="green">Verified</Badge>
+            ) : (
+              <Badge color="red">Not verified</Badge>
+            )}
+          </Flex>
           <Text>{saved ? "Saved" : "Not saved"}</Text>
         </Flex>
         <form
@@ -116,7 +145,20 @@ const UserForm = ({ user }) => {
               </SearchSelect>
             </Col>
             <Col numColSpan={6}>
-              <Button>Save</Button>
+              <Flex>
+                <Button>Save</Button>
+                <Flex className="gap-3" justifyContent="end">
+                  {user.verified ? (
+                    <Button color="red" onClick={revokeVerification}>
+                      Revoke
+                    </Button>
+                  ) : (
+                    <Button color="green" onClick={handleVerify}>
+                      Verify
+                    </Button>
+                  )}
+                </Flex>
+              </Flex>
             </Col>
           </Grid>
         </form>

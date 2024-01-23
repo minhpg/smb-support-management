@@ -3,7 +3,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Table, TableBody, TableCell, TableRow, Text } from "@tremor/react";
 import { useEffect, useState } from "react";
-import ApprovalStatus from '../ApprovalStatus.component'
+import ApprovalStatus from "../ApprovalStatus.component";
 
 const LoadApprovals = ({ updateId }) => {
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,6 @@ const LoadApprovals = ({ updateId }) => {
         .select("*, group (*, campus (*))")
         .eq("update", updateId)
         .order("index", { ascending: true });
-      console.log(approvalGroups);
 
       setApprovals(approvalGroups);
       setLoading(false);
@@ -37,10 +36,14 @@ const LoadApprovals = ({ updateId }) => {
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{group.name}</TableCell>
                 <TableCell>{group.campus ? group.campus.name : ""}</TableCell>
-                <TableCell><ApprovalStatus approval={{
-                  approved,
-                  rejected
-                }} /></TableCell>
+                <TableCell>
+                  <ApprovalStatus
+                    approval={{
+                      approved,
+                      rejected,
+                    }}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -15,12 +15,13 @@ import {
 } from "@tremor/react";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton.component";
-import CreateNewUpdateButton from './CreateNewUpdateTypeButton.component'
+import CreateNewUpdateButton from "./CreateNewUpdateTypeButton.component";
 
 const DashboardUpdateTypesPage = async () => {
   const { supabase } = await getSession();
-  const { data: updateTypes } = await supabase.from("update_types").select("*, campus (id, name)");
-  console.log(updateTypes);
+  const { data: updateTypes } = await supabase
+    .from("update_types")
+    .select("*, campus (id, name)");
 
   return (
     <>
@@ -49,8 +50,8 @@ const DashboardUpdateTypesPage = async () => {
                 </TableCell>
                 <TableCell>{updateType.description || "None"}</TableCell>
                 <TableCell>
-                {updateType.campus ? updateType.campus.name : "None"}
-              </TableCell>
+                  {updateType.campus ? updateType.campus.name : "None"}
+                </TableCell>
                 <TableCell>
                   {updateType.requires_approval ? "Yes" : "No"}
                 </TableCell>

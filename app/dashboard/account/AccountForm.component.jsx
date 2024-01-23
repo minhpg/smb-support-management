@@ -34,7 +34,7 @@ const AccountForm = ({ authUser, user }) => {
     formData.forEach((value, key) => {
       formDataObj[key] = value.length > 0 ? value : null;
     });
-    console.log(formDataObj);
+    
     await supabase.from("users").upsert(formDataObj);
     setSaved(true);
   };

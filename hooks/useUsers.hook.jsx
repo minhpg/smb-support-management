@@ -8,8 +8,7 @@ const useUsers = (supabase) => {
       .from("users")
       .select("*, campus (name), role (name)")
       .then(({ data }) => {
-        console.log(data);
-        if(data) setUsers(data);
+        if (data) setUsers(data);
         setLoading(false);
       });
   }, []);

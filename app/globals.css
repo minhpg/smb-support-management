@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 .supabase-auth-ui_ui-button {
-    @apply bg-red-700 text-white border-0 shadow-xl !important
-  }
+  @apply bg-red-700 text-white border-0 shadow-xl !important;
+}

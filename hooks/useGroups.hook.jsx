@@ -8,7 +8,6 @@ const useGroups = (supabase) => {
       .from("groups")
       .select("*, campus (name)")
       .then(({ data }) => {
-        console.log(data);
         if (data) setGroups(data);
         setLoading(false);
       });

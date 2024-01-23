@@ -29,8 +29,6 @@ const LoadRequestItems = ({ equipmentRequestId }) => {
         .from("equipment_request_items")
         .select("*")
         .eq("equipment_request", equipmentRequestId);
-      console.log(requestItems);
-
       setItems(requestItems);
       setLoading(false);
     };
@@ -53,8 +51,12 @@ const LoadRequestItems = ({ equipmentRequestId }) => {
             {items.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>#{index + 1}</TableCell>
-                <TableCell><TextInput value={item.name} disabled/></TableCell>
-                <TableCell><NumberInput value={item.amount} disabled /></TableCell>
+                <TableCell>
+                  <TextInput value={item.name} disabled />
+                </TableCell>
+                <TableCell>
+                  <NumberInput value={item.amount} disabled />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

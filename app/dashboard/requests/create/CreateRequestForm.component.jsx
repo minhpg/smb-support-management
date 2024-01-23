@@ -21,9 +21,11 @@ import createRequestFormAction from "./createRequestFormAction";
 import useGroups from "@/hooks/useGroups.hook";
 import useCampuses from "@/hooks/useCampuses.hook";
 import usePreviews from "@/hooks/usePreviews.hook";
+import { useRouter } from "next/navigation";
 
 const CreateRequestForm = () => {
   const supabase = createClientComponentClient();
+  const router = useRouter();
 
   const campuses = useCampuses(supabase);
 
@@ -33,7 +35,14 @@ const CreateRequestForm = () => {
 
   return (
     <>
-      <form action={createRequestFormAction}>
+      <form
+        action={async (formData) => {
+          const response = await createRequestFormAction(formData);
+          if (response) {
+            router.replace("/dashboard/requests/" + response.data.id);
+          }
+        }}
+      >
         <Card>
           <Flex>
             <Title className="w-full">New Request</Title>

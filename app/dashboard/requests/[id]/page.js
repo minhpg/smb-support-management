@@ -12,26 +12,28 @@ import {
 import RequestStatus from "@/app/dashboard/requests/RequestStatus.component";
 import LoadMedia from "./LoadMedia.component";
 import LoadUpdate from "./LoadUpdate.component";
-import CreateUpdate from './CreateUpdate.component'
+import CreateUpdate from "./CreateUpdate.component";
 import ChangeRequestStatus from "./ChangeRequestStatus.component";
 import DeleteButton from "../DeleteButton.component";
 import Link from "next/link";
 import { timeSince } from "@/utils";
+import getUserProfile from "@/supabase/getUserProfile";
 
 const DashboardUpdateRequestPage = async ({ params }) => {
-  const { supabase } = await getSession();
+  const { supabase, user } = await getUserProfile();
   const { data: request, error } = await supabase
     .from("requests")
     .select(
-      "*, from(id, first_name, last_name, email, phone), campus (id, name)"
+      "*, from(id, first_name, last_name, email, phone), campus (id, name)",
     )
     .eq("id", params.id)
     .single();
-  
-  console.log(error)
-    
-  if(!request){
-    return <Text>Request not found!</Text>
+
+  let allowCreateUpdate = true;
+  if (user.role.permission_level == "USER") allowCreateUpdate = false;
+
+  if (!request) {
+    return <Text>Request not found!</Text>;
   }
 
   const { data: respondGroupMembers } = await supabase
@@ -111,10 +113,23 @@ const DashboardUpdateRequestPage = async ({ params }) => {
       <Card className="mt-6">
         <Flex>
           <Title>Updates</Title>
-          { !(request.completed || request.rejected) && <CreateUpdate requestId={request.id} />}
+          {!(request.completed || request.rejected) && (
+            <>
+              {allowCreateUpdate && (
+                <CreateUpdate
+                  requestId={request.id}
+                  campusId={request.campus.id}
+                />
+              )}
+            </>
+          )}
         </Flex>
         <div className="mt-6">
-        <LoadUpdate supabase={supabase} requestId={request.id} requestLocked={request.completed || request.rejected}/>
+          <LoadUpdate
+            supabase={supabase}
+            requestId={request.id}
+            requestLocked={request.completed || request.rejected}
+          />
         </div>
       </Card>
     </>

@@ -7,7 +7,7 @@ import { useState } from "react";
 
 import Logo from "./Logo.component";
 
-const NavbarDialog = ({ navbarItems }) => {
+const NavbarDialog = ({ navbarItems, user }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
@@ -78,6 +78,17 @@ const NavbarDialog = ({ navbarItems }) => {
                     </Button>
                   </Link>
                 ))}
+                <Link href="/dashboard/account">
+                  <Button variant="light" size="xl" className="py-4">
+                    {user.first_name && user.last_name ? (
+                      <>
+                        {user.first_name} {user.last_name}
+                      </>
+                    ) : (
+                      "Your account"
+                    )}
+                  </Button>
+                </Link>
                 <Link href="/auth/signout">
                   <Button
                     color="red"

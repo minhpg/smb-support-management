@@ -2,6 +2,7 @@
 
 import getSession from "@/supabase/getSession";
 import { v4 } from "uuid";
+import { notifyNewUpdate } from '@/emails/mailService'
 
 const createUpdateFormAction = async (formData) => {
   try {
@@ -33,8 +34,6 @@ const createUpdateFormAction = async (formData) => {
     // Upload images
     let mediaGroup = null;
     if (images.length > 0) {
-      console.log(images);
-      console.log(items);
       if (images[0].size == 0) mediaGroup = null;
       else mediaGroup = await uploadImages(supabase, images);
     }
@@ -58,7 +57,7 @@ const createUpdateFormAction = async (formData) => {
           });
         }
 
-        equipment_request = equipmentRequest.id
+        equipment_request = equipmentRequest.id;
       }
     }
 
@@ -72,16 +71,12 @@ const createUpdateFormAction = async (formData) => {
       deadline,
     };
 
-    console.log(updateObj);
-
     // Create new request
     const { data: update, error } = await supabase
       .from("updates")
       .insert(updateObj)
       .select()
       .single();
-
-    console.log(update, error);
 
     // Create approval members
     const { data: approvalMembers } = await supabase
@@ -95,6 +90,8 @@ const createUpdateFormAction = async (formData) => {
       });
     }
 
+    // await notifyNewUpdate(update.id)
+
     return {
       success: true,
       message: "created new support request",
@@ -102,10 +99,8 @@ const createUpdateFormAction = async (formData) => {
     };
 
     // const url = `/dashboard/requests/${data.id}`
-    // console.log(url)
     // redirect(url)
   } catch (e) {
-    console.log(e);
     // return {
     //   success: false,
     //   message: e.message
@@ -115,7 +110,6 @@ const createUpdateFormAction = async (formData) => {
 
 const uploadImages = async (supabase, files) => {
   // Register media group
-  console.log("creating new media group");
   const { data: newMediaGroup, error } = await supabase
     .from("media")
     .insert({})

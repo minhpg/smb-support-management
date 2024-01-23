@@ -40,9 +40,8 @@ const UpdateTypeForm = ({ updateType: initUpdateType }) => {
     <>
       <form
         action={async (formData) => {
-          const { data: newUpdateType } = await updateUpdateTypeFormAction(
-            formData
-          );
+          const { data: newUpdateType } =
+            await updateUpdateTypeFormAction(formData);
           setUpdateType(newUpdateType);
           setSaved(true);
         }}
@@ -183,7 +182,6 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
       .select("*, campus (name)")
       .or("campus.is.null" + (campusId ? ",campus.eq." + campusId : ""))
       .then(({ data }) => {
-        console.log(data);
         if (data) setAvailableGroups(data);
         setGroupsLoading(false);
       });
@@ -197,13 +195,11 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
         .eq("update_type", updateTypeId)
         .order("index", { ascending: true })
         .then(({ data }) => {
-          console.log(data);
           const approveGroups = data.map((group) => group.group);
           const approveIds = approveGroups.map((group) => group.id);
           const availableGroupsFiltered = availableGroups.filter(
-            (x) => !approveIds.includes(x.id)
+            (x) => !approveIds.includes(x.id),
           );
-          console.log(availableGroupsFiltered);
           setAvailableGroups(availableGroupsFiltered);
           setSelectedGroups(approveGroups);
         });
@@ -214,14 +210,16 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
     setSaved(false);
     setSelectedGroups([...selectedGroups, group]);
     setAvailableGroups(
-      availableGroups.filter((availableGroup) => availableGroup.id !== group.id)
+      availableGroups.filter(
+        (availableGroup) => availableGroup.id !== group.id,
+      ),
     );
   };
 
   const handleDeleteGroup = (group) => {
     setSaved(false);
     setSelectedGroups(
-      selectedGroups.filter((selectedGroup) => selectedGroup.id !== group.id)
+      selectedGroups.filter((selectedGroup) => selectedGroup.id !== group.id),
     );
     setAvailableGroups([...availableGroups, group]);
   };
@@ -253,7 +251,6 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
       updateTypeId,
       selectedGroups,
     });
-    console.log(data);
     setSaved(true);
   };
 

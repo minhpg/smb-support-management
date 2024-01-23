@@ -3,7 +3,6 @@
 import getSession from "@/supabase/getSession";
 
 const updateUpdateTypeFormAction = async (formData) => {
-  console.log(formData);
   const { supabase } = await getSession();
 
   const title = formData.get("title");
@@ -15,7 +14,7 @@ const updateUpdateTypeFormAction = async (formData) => {
     ? true
     : false;
   const attach_existing_request_items = formData.get(
-    "attach_existing_request_items"
+    "attach_existing_request_items",
   )
     ? true
     : false;

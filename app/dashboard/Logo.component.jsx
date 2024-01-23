@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const Logo = () => {
   return (
-    <Link href="/">
+    <Link href="/dashboard">
       <div className="flex justify-start gap-3">
-        <img src="/logo.png" className="h-12" />
+        <Image src="/logo.png" width={44} height={48} />
         <div className="font-semibold">
           <div>
             MapleBear<span className="text-red-600">Sunshine</span>

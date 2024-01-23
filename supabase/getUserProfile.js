@@ -9,14 +9,12 @@ const getUserProfile = async () => {
     data: { session },
   } = await supabase.auth.getSession();
 
-  console.log(session);
-
   let user = null;
 
   if (session) {
-    const data = await supabase
+    const { data } = await supabase
       .from("users")
-      .select("*, campus (id, name), role (id, name)")
+      .select("*, campus (*), role (*)")
       .eq("id", session.user.id)
       .single();
     user = data;

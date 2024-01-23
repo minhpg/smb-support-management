@@ -15,12 +15,10 @@ import Link from "next/link";
 import DeleteButton from "./DeleteButton.component";
 
 const DashboardGroupsPage = async () => {
-  
   const { supabase } = await getSession();
   const { data: groups } = await supabase
     .from("groups")
     .select("*, campus (name)");
-  console.log(groups);
 
   return (
     <>
@@ -44,8 +42,12 @@ const DashboardGroupsPage = async () => {
             {groups.map((group) => (
               <TableRow>
                 <TableCell>{group.name}</TableCell>
-                <TableCell>{group.campus ? group.campus.name : "None"}</TableCell>
-                <TableCell><DeleteButton groupId={group.id} /></TableCell>
+                <TableCell>
+                  {group.campus ? group.campus.name : "None"}
+                </TableCell>
+                <TableCell>
+                  <DeleteButton groupId={group.id} />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

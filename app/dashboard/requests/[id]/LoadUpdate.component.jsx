@@ -80,16 +80,16 @@ const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
                   <LoadApprovals updateId={update.id} />
                 </div>
               )}
-              {update.update_type.attach_request_items ||
-                (update.update_type.attach_existing_request_items && (
-                  <div className="mt-3">
-                    <Text>Request items</Text>
-                    <LoadRequestItems
-                      equipmentRequestId={update.equipment_request}
-                    />
-                  </div>
-                ))}
-              {update.update_type.attach_media && (
+              {(update.update_type.attach_request_items ||
+                update.update_type.attach_existing_request_items) && (
+                <div className="mt-3">
+                  <Text>Request items</Text>
+                  <LoadRequestItems
+                    equipmentRequestId={update.equipment_request}
+                  />
+                </div>
+              )}
+              {update.update_type.attach_media && update.media && (
                 <div className="mt-3">
                   <LoadMedia mediaId={update.media} />
                 </div>

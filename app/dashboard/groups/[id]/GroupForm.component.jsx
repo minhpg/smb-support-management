@@ -22,8 +22,8 @@ const GroupForm = ({ user }) => {
 
   const [saved, setSaved] = useState(true);
   const campuses = useCampuses(supabase);
-  const roles = useRoles(supabase)
-  
+  const roles = useRoles(supabase);
+
   const onSubmit = async (event) => {
     setSaved(false);
     event.preventDefault();
@@ -34,7 +34,6 @@ const GroupForm = ({ user }) => {
       id: user.id,
     };
     formData.forEach((value, key) => (formDataObj[key] = value));
-    console.log(formDataObj);
     await supabase.from("users").upsert(formDataObj);
     setSaved(true);
   };

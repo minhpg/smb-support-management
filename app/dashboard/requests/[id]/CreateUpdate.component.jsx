@@ -28,6 +28,7 @@ import createUpdateFormAction from "./createUpdateFormAction";
 import { useRouter } from "next/navigation";
 
 const useCreateUpdate = (supabase, requestId) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [updateType, setUpdateType] = useState(null);
   const [approveGroups, setApproveGroups] = useState([]);
@@ -58,9 +59,9 @@ const useCreateUpdate = (supabase, requestId) => {
           .from("approve_groups")
           .select("*, group(*, campus (name))")
           .eq("update_type", updateType.id)
+
           .order("index", { ascending: true })
           .then(({ data }) => {
-            console.log(data);
             setApproveGroups(data);
           });
       }
@@ -77,14 +78,24 @@ const useCreateUpdate = (supabase, requestId) => {
       formData.append("media[]", image);
     }
     formData.append("text", text);
-    formData.append("deadline", deadline.toISOString().replace('T',' ').replace('Z',''));
+    formData.append(
+      "deadline",
+      deadline ? deadline.toISOString().replace("T", " ").replace("Z", "") : "",
+    );
     formData.append("equipment_request", attachRequestItems);
 
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-    
     await createUpdateFormAction(formData);
+
+    // reset form
+    setSelectedType(null);
+    setUpdateType(null);
+    setApproveGroups([]);
+    setItems([]);
+    setMediaFiles([]);
+    setText("");
+    setDeadline(null);
+    setAttachRequestItems([]);
+    setIsOpen(false);
 
     router.refresh();
   };
@@ -105,13 +116,14 @@ const useCreateUpdate = (supabase, requestId) => {
     setDeadline,
     attachRequestItems,
     setAttachRequestItems,
+    isOpen,
+    setIsOpen,
   };
 };
 
-const CreateUpdate = ({ requestId }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const CreateUpdate = ({ requestId, campusId }) => {
   const supabase = createClientComponentClient();
-  const types = useUpdateTypes(supabase);
+  const types = useUpdateTypes(supabase, campusId);
 
   const {
     updateType,
@@ -128,6 +140,8 @@ const CreateUpdate = ({ requestId }) => {
     deadline,
     setDeadline,
     setAttachRequestItems,
+    isOpen,
+    setIsOpen,
   } = useCreateUpdate(supabase, requestId);
 
   const { previews, onSelectFile, selectedFiles } = usePreviews();
@@ -301,16 +315,12 @@ const NewRequestItemList = ({ items, setItems }) => {
 
   const handleUpdateName = (index, value) => {
     const copy = [...items];
-    console.log(copy);
-
     copy[index].name = value;
     setItems(copy);
   };
 
   const handleUpdateAmount = (index, value) => {
     const copy = [...items];
-    console.log(copy);
-
     copy[index].amount = value;
     setItems(copy);
   };
@@ -377,14 +387,13 @@ const SelectRequestItemList = ({ requestId, setAttachRequestItems }) => {
         setLists(equipmentLists);
       });
   }, []);
+
   useEffect(() => {
     const loadItemsAsync = async () => {
       const { data: requestItems } = await supabase
         .from("equipment_request_items")
         .select("*")
         .eq("equipment_request", list);
-      console.log(requestItems);
-
       setItems(requestItems);
       setLoading(false);
     };

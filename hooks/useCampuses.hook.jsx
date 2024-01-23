@@ -8,8 +8,7 @@ const useCampuses = (supabase) => {
       .from("campuses")
       .select("*")
       .then(({ data }) => {
-        console.log(data);
-        if(data) setCampuses(data);
+        if (data) setCampuses(data);
       });
   }, []);
 

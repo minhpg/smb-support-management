@@ -1,39 +1,18 @@
+"use client";
+
 import { Button, Flex } from "@tremor/react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
 import Link from "next/link";
+
 import Logo from "./Logo.component";
 import NavbarDialog from "./NavbarDialog.component";
+import useNavbar from "../../hooks/useNavbar.hook";
 
-export const navbarItems = [
-  {
-    title: "Groups",
-    path: "/dashboard/groups",
-  },
-  {
-    title: "Requests",
-    path: "/dashboard/requests",
-  },
-  {
-    title: "Approvals",
-    path: "/dashboard/approvals",
-  },
-  {
-    title: "Update Types",
-    path: '/dashboard/update-types'
-  },
-  {
-    title: "Users",
-    path: "/dashboard/users",
-  },
-  {
-    title: "Monitor",
-    path: "/dashboard/monitor",
-  },
-];
+const Navbar = () => {
+  const supabase = createClientComponentClient();
 
-
-const Navbar = async () => {
-  // const { user, supabase} = await getUserProfile();
-  // console.log(user)
+  const { user, navbarItems } = useNavbar(supabase);
 
   return (
     <>
@@ -45,21 +24,36 @@ const Navbar = async () => {
           <div className="lg:hidden w-full text-xl">
             <Logo />
           </div>
-          <Flex className="space-x-8 hidden lg:flex" justifyContent="end">
-            {navbarItems.map((item) => (
-              <Link href={item.path} key={item.path}>
-                <Button color="slate" variant="light" className={`h-full`}>
-                  {item.title}
-                </Button>
-              </Link>
-            ))}
-            <Link href="/auth/signout">
-              <Button color="red" variant="light" className="h-full">
-                Logout
-              </Button>
-            </Link>
-          </Flex>
-		  <NavbarDialog navbarItems={navbarItems}/>
+          {navbarItems.length > 0 && (
+            <>
+              <Flex className="space-x-8 hidden lg:flex" justifyContent="end">
+                {navbarItems.map((item) => (
+                  <Link href={item.path} key={item.path}>
+                    <Button color="slate" variant="light" className={`h-full`}>
+                      {item.title}
+                    </Button>
+                  </Link>
+                ))}
+                <Link href="/dashboard/account">
+                  <Button variant="light" className="h-full">
+                    {user.first_name && user.last_name ? (
+                      <>
+                        {user.first_name} {user.last_name}
+                      </>
+                    ) : (
+                      "Your account"
+                    )}
+                  </Button>
+                </Link>
+                <Link href="/auth/signout">
+                  <Button color="red" variant="light" className="h-full">
+                    Logout
+                  </Button>
+                </Link>
+              </Flex>
+              <NavbarDialog navbarItems={navbarItems} user={user} />
+            </>
+          )}
         </Flex>
       </Flex>
     </>

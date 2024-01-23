@@ -2,4 +2,4 @@ const DashboardPage = () => {
   return <></>;
 };
 
-export default DashboardPage
+export default DashboardPage;
