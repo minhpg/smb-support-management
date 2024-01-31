@@ -1,5 +1,5 @@
 import getSession from "@/supabase/getSession";
-import UserForm from "./UserForm.component";
+import UserForm from "./components/UserForm.component";
 
 const DashboardUserPage = async ({ params }) => {
   const { supabase } = await getSession();

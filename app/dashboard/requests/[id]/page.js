@@ -1,4 +1,3 @@
-import getSession from "@/supabase/getSession";
 import {
   Badge,
   Button,
@@ -9,13 +8,15 @@ import {
   Text,
   Title,
 } from "@tremor/react";
-import RequestStatus from "@/app/dashboard/requests/RequestStatus.component";
-import LoadMedia from "./LoadMedia.component";
-import LoadUpdate from "./LoadUpdate.component";
-import CreateUpdate from "./CreateUpdate.component";
-import ChangeRequestStatus from "./ChangeRequestStatus.component";
-import DeleteButton from "../DeleteButton.component";
 import Link from "next/link";
+
+import RequestStatus from "@/app/dashboard/requests/components/RequestStatus.component";
+import LoadMedia from "./components/LoadMedia.component";
+import LoadUpdate from "./components/LoadUpdate.component";
+import CreateUpdate from "./components/CreateUpdate";
+import ChangeRequestStatus from "./components/ChangeRequestStatus.component";
+import DeleteButton from "@/app/dashboard/requests/components/DeleteButton.component";
+
 import { timeSince } from "@/utils";
 import getUserProfile from "@/supabase/getUserProfile";
 
@@ -24,7 +25,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
   const { data: request, error } = await supabase
     .from("requests")
     .select(
-      "*, from(id, first_name, last_name, email, phone), campus (id, name)",
+      "*, from(id, first_name, last_name, email, phone), campus (id, name)"
     )
     .eq("id", params.id)
     .single();
@@ -75,7 +76,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
           <Col numColSpan={2}>
             <Text>Created at</Text>
             <Text className="py-2 text-black">
-              {new Date(request.created_at).toLocaleString()} (
+              {new Date(request.created_at).toLocaleString("vi-vn")} (
               {timeSince(new Date(request.created_at))} ago)
             </Text>
           </Col>

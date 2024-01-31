@@ -61,6 +61,10 @@ const useNavbar = (supabase) => {
             path: "/dashboard/groups",
           },
           {
+            title: "Campuses",
+            path: "/dashboard/campuses",
+          },
+          {
             title: "Requests",
             path: "/dashboard/requests",
           },

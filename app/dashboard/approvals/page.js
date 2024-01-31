@@ -1,27 +1,47 @@
-import getSession from "@/supabase/getSession";
 import {
-  Button,
   Card,
-  Flex,
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeaderCell,
   TableRow,
   Title,
 } from "@tremor/react";
-import ApprovalRow from "./ApprovalRow.component";
-import ApprovalFilters from "./ApprovalFilters.component";
+
+import ApprovalRow from "./components/ApprovalRow.component";
+import ApprovalFilters from "./components/ApprovalFilters.component";
+
+import getUserProfile from "@/supabase/getUserProfile";
 
 const DashboardUpdatesApprovalPage = async ({ searchParams }) => {
-
-  const { supabase } = await getSession();
+  const { supabase, user } = await getUserProfile();
   let query = supabase
     .from("update_approvals")
     .select(
-      "*, update(*, request(*, from(id, first_name, last_name, email, phone), campus (id, name)), update_type (*), created_by (*)), group (*, campus(*))",
+      "*, update(*, request(*, to, from(id, first_name, last_name, email, phone), campus (id, name)), update_type (*), created_by (*)), group (*, campus(*))"
     );
+
+  const permissionLevel = user.role.permission_level;
+
+  if (permissionLevel == "MODERATOR") {
+    
+      // check moderator groups
+      // const { data: groups } = await supabase
+      //   .from("group_members")
+      //   .select("group")
+      //   .eq("user", user.id);
+  
+      // const { data: respondGroups } = await supabase
+      //   .from("respond_group_members")
+      //   .select("respond_group")
+      //   .or(groups.map(({ group }) => `group.eq.${group}`).join(","));
+  
+      // query = query.or(
+      //   respondGroups
+      //     .map(({ respond_group }) => `update.request.to.eq.${respond_group}`)
+      //     .join(",")
+      // );
+  }
 
   if (searchParams.order && searchParams.order_by) {
     if (searchParams.order == "asc") {
@@ -52,7 +72,9 @@ const DashboardUpdatesApprovalPage = async ({ searchParams }) => {
     query.eq("group", searchParams.group);
   }
 
-  const { data: approvals } = await query;
+  const { data: approvals, error } = await query;
+
+  console.log(error)
 
   return (
     <>

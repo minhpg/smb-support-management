@@ -1,5 +1,5 @@
 import getSession from "@/supabase/getSession";
-import UpdateTypeForm from "./UpdateTypeForm.component";
+import UpdateTypeForm from "./components/UpdateTypeForm";
 
 const DashboardUpdateTypePage = async ({ params }) => {
   const { supabase } = await getSession();

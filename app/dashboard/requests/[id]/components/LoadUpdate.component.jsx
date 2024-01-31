@@ -8,11 +8,13 @@ import {
   Flex,
   Text,
 } from "@tremor/react";
+
 import LoadMedia from "./LoadMedia.component";
 import LoadRequestItems from "./LoadRequestItems.component";
 import LoadApprovals from "./LoadApprovals.component";
-import DeadlineBadge from "../DeadlineBadge.component";
+import DeadlineBadge from "../../components/DeadlineBadge.component";
 import UpdateActions from "./UpdateActions.component";
+
 import Link from "next/link";
 
 const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
@@ -35,7 +37,7 @@ const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
               <Flex>
                 <div>
                   {update.update_type.title} -{" "}
-                  {new Date(update.created_at).toLocaleString()}
+                  {new Date(update.created_at).toLocaleString("vi-vn")}
                 </div>
                 {update.update_type.requires_deadline && (
                   <>

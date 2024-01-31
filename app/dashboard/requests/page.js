@@ -1,4 +1,3 @@
-import getSession from "@/supabase/getSession";
 import {
   Button,
   Card,
@@ -13,10 +12,11 @@ import {
   TableRow,
   Title,
 } from "@tremor/react";
-import RequestStatus from "@/app/dashboard/requests/RequestStatus.component";
 import Link from "next/link";
-import DeleteButton from "./DeleteButton.component";
-import RequestFilters from "./RequestFilters.component";
+
+import RequestStatus from "./components/RequestStatus.component";
+import DeleteButton from "./components/DeleteButton.component";
+import RequestFilters from "./components/RequestFilters.component";
 import getUserProfile from "@/supabase/getUserProfile";
 
 const DashboardRequestsPage = async ({ searchParams }) => {
@@ -28,6 +28,25 @@ const DashboardRequestsPage = async ({ searchParams }) => {
 
   if (permissionLevel == "USER") {
     query = query.eq("from", user.id);
+  }
+
+  if (permissionLevel == "MODERATOR") {
+    // check moderator groups
+    const { data: groups } = await supabase
+      .from("group_members")
+      .select("group")
+      .eq("user", user.id);
+
+    const { data: respondGroups } = await supabase
+      .from("respond_group_members")
+      .select("respond_group")
+      .or(groups.map(({ group }) => `group.eq.${group}`).join(","));
+
+    query = query.or(
+      respondGroups
+        .map(({ respond_group }) => `to.eq.${respond_group}`)
+        .join(",")
+    );
   }
 
   if (searchParams.order && searchParams.order_by) {
@@ -59,11 +78,22 @@ const DashboardRequestsPage = async ({ searchParams }) => {
     query.eq("priority", searchParams.priority);
   }
 
-  // if(searchParams.group){
-  //   query.eq('group', searchParams.group)
+  // if (searchParams.group) {
+  //   const { data: respondGroups } = await supabase
+  //   .from("respond_group_members")
+  //   .select("respond_group")
+  //   .eq('group', searchParams.group)
+
+  //  query = query.or(
+  //   respondGroups
+  //     .map(({ respond_group }) => `to.eq.${respond_group}`)
+  //     .join(",")
+  //   );
   // }
 
   const { data: requests, error } = await query;
+
+  console.log(error);
 
   return (
     <>
@@ -96,7 +126,7 @@ const DashboardRequestsPage = async ({ searchParams }) => {
                   </Link>
                 </TableCell>
                 <TableCell>
-                  {new Date(request.created_at).toLocaleString()}
+                  {new Date(request.created_at).toLocaleString("vi-vn")}
                 </TableCell>
                 <TableCell>
                   <Link href={`/dashboard/users/${request.from.id}`}>

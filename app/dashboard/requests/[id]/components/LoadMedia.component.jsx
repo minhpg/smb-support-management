@@ -16,15 +16,18 @@ const LoadMedia = ({ mediaId }) => {
       .from("media_items")
       .select("*")
       .eq("media", mediaId);
-    const loadedImages = await Promise.all(
-      mediaFiles.map(async (mediaFile) => {
-        const { data } = await supabase.storage
-          .from("media")
-          .createSignedUrl(mediaFile.path, 36000);
-        return data.signedUrl;
-      }),
-    );
-    setImages(loadedImages);
+
+    if(mediaFiles){
+      const loadedImages = await Promise.all(
+        mediaFiles.map(async (mediaFile) => {
+          const { data } = await supabase.storage
+            .from("media")
+            .createSignedUrl(mediaFile.path, 36000);
+          return data.signedUrl;
+        }),
+      );
+      setImages(loadedImages);
+    }
     setLoading(false);
   };
 
@@ -40,7 +43,7 @@ const LoadMedia = ({ mediaId }) => {
           Show images
         </Button>
       )}
-      {!loading && (
+      {(!loading && images.length > 0 ) && (
         <Grid className="gap-3" numItems={2} numItemsMd={3} numItemsLg={4}>
           {/* {images.length == 0 && <Text>Loading...</Text>} */}
           {images.map((url, index) => (
@@ -52,6 +55,9 @@ const LoadMedia = ({ mediaId }) => {
           ))}
         </Grid>
       )}
+      {
+        (!loading && images.length == 0 ) && <div>No images!</div>
+      }
     </Col>
   );
 };

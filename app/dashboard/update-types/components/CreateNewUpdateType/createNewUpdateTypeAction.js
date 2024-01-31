@@ -1,5 +1,7 @@
 "use server";
+
 import getSession from "@/supabase/getSession";
+
 const createNewUpdateTypeAction = async () => {
   const { supabase } = await getSession();
   const { data: newUpdateType } = await supabase

@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import Logo from "./Logo.component";
 import NavbarDialog from "./NavbarDialog.component";
-import useNavbar from "../../hooks/useNavbar.hook";
+import useNavbar from "@/hooks/useNavbar.hook";
 
 const Navbar = () => {
   const supabase = createClientComponentClient();
@@ -36,13 +36,14 @@ const Navbar = () => {
                 ))}
                 <Link href="/dashboard/account">
                   <Button variant="light" className="h-full">
-                    {user.first_name && user.last_name ? (
+                    {/* {user.first_name && user.last_name ? (
                       <>
                         {user.first_name} {user.last_name}
                       </>
                     ) : (
                       "Your account"
-                    )}
+                    )} */}
+                    Account
                   </Button>
                 </Link>
                 <Link href="/auth/signout">

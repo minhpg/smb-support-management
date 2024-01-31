@@ -48,7 +48,17 @@ const RequestFilters = ({ searchParams }) => {
               <SelectItem value="3">High</SelectItem>
             </Select>
           </Col>
-          <Col numColSpan={2}>
+          {/* <Col>
+            <Text>Group</Text>
+            <Select name="group" defaultValue={searchParams.group}>
+              {groups.map((group) => (
+                <SelectItem key={group.id} value={group.id}>
+                  {`${group.name}${group.campus ? ` - ${group.campus.name}` : ""}`}
+                </SelectItem>
+              ))}
+            </Select>
+          </Col> */}
+          <Col>
             <Text>Order</Text>
             <Select name="order" defaultValue={searchParams.order}>
               <SelectItem value="asc">Ascending</SelectItem>

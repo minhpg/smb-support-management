@@ -1,16 +1,16 @@
 import getSession from "@/supabase/getSession";
-import GroupForm from "./components/GroupForm.component";
+import CampusForm from "./components/CampusForm.component";
 
 const DashboardUserPage = async ({ params }) => {
   const { supabase } = await getSession();
 
   const { data } = await supabase
-    .from("groups")
+    .from("campuses")
     .select("*")
     .eq("id", params.id)
     .single();
 
-  return <GroupForm group={data} />;
+  return <CampusForm campus={data} />;
 };
 
 export default DashboardUserPage;

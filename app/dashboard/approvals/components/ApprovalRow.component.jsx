@@ -9,15 +9,17 @@ import {
   Text,
   Title,
 } from "@tremor/react";
-import ApprovalStatus from "./ApprovalStatus.component";
-import Link from "next/link";
-import LoadRequestItems from "../requests/[id]/LoadRequestItems.component";
-
-import LoadMedia from "../requests/[id]/LoadMedia.component";
 import { useState } from "react";
-import { timeSince } from "@/utils";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+import ApprovalStatus from "./ApprovalStatus.component";
+import LoadRequestItems from "@/app/dashboard/requests/[id]/components/LoadRequestItems.component";
+import LoadMedia from "@/app/dashboard/requests/[id]/components/LoadMedia.component";
+
+import { timeSince } from "@/utils";
+
 
 const ApprovalRow = ({ approval }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -52,9 +54,13 @@ const ApprovalRow = ({ approval }) => {
     <>
       <TableRow>
         <TableCell>{update.update_type.title}</TableCell>
-        <TableCell>{new Date(update.created_at).toLocaleString()}</TableCell>
+        <TableCell>{new Date(update.created_at).toLocaleString("vi-vn")}</TableCell>
         <TableCell>
-          <Button variant="light">{approval.update.request.title}</Button>
+        <Link href={`/dashboard/requests/${approval.update.request.id}`}>
+                  <Button variant="light" className="py-2">
+                   {approval.update.request.title}
+                  </Button>
+                </Link>
         </TableCell>
         <TableCell>
           {approval.group.name}{" "}
@@ -108,16 +114,14 @@ const ApprovalRow = ({ approval }) => {
                 <Text>From</Text>
                 <Link href={`/dashboard/users/${request.from.id}`}>
                   <Button variant="light" className="py-2">
-                    {`${request.from.first_name} ${request.from.last_name} - ${
-                      request.from.phone || request.from.email
-                    }`}
+                    {`${request.from.first_name} ${request.from.last_name}`}
                   </Button>
                 </Link>
               </Col>
               <Col numColSpan={2}>
                 <Text>Created at</Text>
                 <Text className="py-2 text-black">
-                  {new Date(request.created_at).toLocaleString()} (
+                  {new Date(request.created_at).toLocaleString("vi-vn")} (
                   {timeSince(new Date(request.created_at))} ago)
                 </Text>
               </Col>

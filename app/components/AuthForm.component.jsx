@@ -3,7 +3,7 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import Logo from "./dashboard/Logo.component";
+import Logo from "../dashboard/components/Logo.component";
 
 const AuthForm = () => {
   const supabase = createClientComponentClient();

@@ -1,4 +1,4 @@
-import CreateGroupForm from "./CreateGroupForm.component";
+import CreateGroupForm from "./CreateGroupForm";
 
 const DashboardCreateGroupPage = async () => {
   return <CreateGroupForm />;

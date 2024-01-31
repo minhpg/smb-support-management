@@ -1,10 +1,7 @@
-import getSession from "@/supabase/getSession";
 import {
   Button,
   Card,
   Flex,
-  Select,
-  SelectItem,
   Table,
   TableBody,
   TableCell,
@@ -14,8 +11,11 @@ import {
   Title,
 } from "@tremor/react";
 import Link from "next/link";
-import DeleteButton from "./DeleteButton.component";
-import CreateNewUpdateButton from "./CreateNewUpdateTypeButton.component";
+
+import getSession from "@/supabase/getSession";
+
+import DeleteButton from "./components/DeleteButton.component";
+import CreateNewUpdateButton from "./components/CreateNewUpdateType";
 
 const DashboardUpdateTypesPage = async () => {
   const { supabase } = await getSession();

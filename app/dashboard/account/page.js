@@ -1,5 +1,5 @@
 import getSession from "@/supabase/getSession";
-import AccountForm from "./AccountForm.component";
+import AccountForm from "./components/AccountForm.component";
 
 const DashboardAccountPage = async () => {
   const { session, supabase } = await getSession();

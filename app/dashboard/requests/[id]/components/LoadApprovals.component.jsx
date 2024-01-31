@@ -3,7 +3,8 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Table, TableBody, TableCell, TableRow, Text } from "@tremor/react";
 import { useEffect, useState } from "react";
-import ApprovalStatus from "../ApprovalStatus.component";
+
+import ApprovalStatus from '../../components/ApprovalStatus.component'
 
 const LoadApprovals = ({ updateId }) => {
   const [loading, setLoading] = useState(true);

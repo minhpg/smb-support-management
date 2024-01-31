@@ -12,7 +12,8 @@ import {
   Title,
 } from "@tremor/react";
 import Link from "next/link";
-import DeleteButton from "./DeleteButton.component";
+
+import DeleteButton from "./components/DeleteButton.component";
 
 const DashboardGroupsPage = async () => {
   const { supabase } = await getSession();
@@ -41,7 +42,11 @@ const DashboardGroupsPage = async () => {
           <TableBody>
             {groups.map((group) => (
               <TableRow key={group.id}>
-                <TableCell>{group.name}</TableCell>
+                <TableCell>
+                  <Link href={`/dashboard/groups/${group.id}`}>
+                    <Button variant="light">{group.name}</Button>
+                  </Link>
+                </TableCell>
                 <TableCell>
                   {group.campus ? group.campus.name : "None"}
                 </TableCell>
