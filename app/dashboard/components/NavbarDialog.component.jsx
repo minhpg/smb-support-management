@@ -11,7 +11,7 @@ const NavbarDialog = ({ navbarItems, user }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Flex alignItems="center" className="relative lg:hidden space-x-4">
+      <Flex alignItems="center" className="relative xl:hidden space-x-4">
         <Flex justifyContent="end" className="space-x-3.5">
           <Button onClick={() => setIsOpen(true)} color="slate" variant="light">
             <svg

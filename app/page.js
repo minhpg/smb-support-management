@@ -1,5 +1,5 @@
 import AuthForm from "./components/AuthForm.component";
-
-export default function Home() {
+const HomePage = () => {
   return <AuthForm />;
-}
+};
+export default HomePage;

@@ -1,6 +1,7 @@
 "use server";
 
 import getSession from "@/supabase/getSession";
+import { revalidatePath } from "next/cache";
 import { v4 } from "uuid";
 // import { notifyNewUpdate } from '@/emails/mailService'
 
@@ -91,6 +92,8 @@ const createUpdateFormAction = async (formData) => {
     }
 
     // await notifyNewUpdate(update.id)
+
+    revalidatePath("/dashboard/requests/" + request);
 
     return {
       success: true,

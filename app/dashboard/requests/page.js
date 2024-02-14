@@ -20,8 +20,11 @@ import RequestFilters from "./components/RequestFilters.component";
 import getUserProfile from "@/supabase/getUserProfile";
 
 const DashboardRequestsPage = async ({ searchParams }) => {
+
   const { supabase, user } = await getUserProfile();
+
   const permissionLevel = user.role.permission_level;
+  
   let query = supabase
     .from("requests")
     .select("*, campus (name), from (id, first_name, last_name)");

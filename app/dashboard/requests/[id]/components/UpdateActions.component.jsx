@@ -1,5 +1,6 @@
 "use client";
 
+import { getCurrentTimestampTZ } from "@/utils";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button, Flex } from "@tremor/react";
 import { useRouter } from "next/navigation";
@@ -9,10 +10,12 @@ const UpdateActions = ({ update, requestLocked }) => {
   const supabase = createClientComponentClient();
 
   const markFulfilled = async () => {
-    const response = await supabase
+    const resolved_at = getCurrentTimestampTZ();
+    await supabase
       .from("updates")
       .update({
         fulfilled: true,
+        resolved_at,
       })
       .eq("id", update.id);
     router.refresh();

@@ -26,7 +26,7 @@ import useUpdateTypes from "@/hooks/useUpdateTypes.hook";
 import usePreviews from "@/hooks/usePreviews.hook";
 import createUpdateFormAction from "./createUpdateFormAction";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { useFormStatus } from 'react-dom'
 
 const useCreateUpdate = (supabase, requestId) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,8 @@ const useCreateUpdate = (supabase, requestId) => {
   const [text, setText] = useState("");
   const [deadline, setDeadline] = useState(null);
   const [attachRequestItems, setAttachRequestItems] = useState([]);
-  const router = useRouter();
+
+  const { pending } = useFormStatus()
 
   useEffect(() => {
     if (selectedType) {
@@ -85,9 +86,8 @@ const useCreateUpdate = (supabase, requestId) => {
     );
     formData.append("equipment_request", attachRequestItems);
 
-    await createUpdateFormAction(formData);
-
     // reset form
+    await createUpdateFormAction(formData);
     setSelectedType(null);
     setUpdateType(null);
     setApproveGroups([]);
@@ -98,7 +98,6 @@ const useCreateUpdate = (supabase, requestId) => {
     setAttachRequestItems([]);
     setIsOpen(false);
 
-    router.refresh();
   };
 
   return {
@@ -119,6 +118,7 @@ const useCreateUpdate = (supabase, requestId) => {
     setAttachRequestItems,
     isOpen,
     setIsOpen,
+    pending
   };
 };
 
@@ -135,7 +135,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
     setItems,
     text,
     setText,
-    mediaFiles,
+    // mediaFiles,
     setMediaFiles,
     handleSubmit,
     deadline,
@@ -143,6 +143,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
     setAttachRequestItems,
     isOpen,
     setIsOpen,
+    pending
   } = useCreateUpdate(supabase, requestId);
 
   const { previews, onSelectFile, selectedFiles } = usePreviews();
@@ -286,7 +287,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
                 )}
                 <Col numColSpan={2}>
                   <Flex justifyContent="end">
-                    <Button onClick={handleSubmit}>Submit</Button>
+                    <Button onClick={handleSubmit} disabled={pending}>Submit</Button>
                   </Flex>
                 </Col>
               </Grid>

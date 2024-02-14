@@ -33,7 +33,7 @@ const LoadRequestItems = ({ equipmentRequestId }) => {
       setLoading(false);
     };
     loadItemsAsync();
-  }, []);
+  }, [equipmentRequestId, supabase]);
 
   return (
     <>

@@ -185,7 +185,7 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
         if (data) setAvailableGroups(data);
         setGroupsLoading(false);
       });
-  }, []);
+  }, [campusId, supabase]);
 
   useEffect(() => {
     if (!groupsLoading) {
@@ -204,7 +204,7 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
           setSelectedGroups(approveGroups);
         });
     }
-  }, [groupsLoading]);
+  }, [groupsLoading, updateTypeId]);
 
   const handleAddGroup = (group) => {
     setSaved(false);

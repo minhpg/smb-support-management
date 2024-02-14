@@ -1,4 +1,5 @@
 "use client";
+import { getCurrentTimestampTZ } from "@/utils";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@tremor/react";
 import { useRouter } from "next/navigation";
@@ -16,20 +17,25 @@ const ChangeRequestStatus = ({ requestId }) => {
     await updateRequest({
       rejected: false,
       completed: false,
+      resolved_at: null,
     });
   };
 
   const markRejected = async () => {
+    const resolved_at = getCurrentTimestampTZ();
     await updateRequest({
       rejected: true,
       completed: false,
+      resolved_at,
     });
   };
 
   const markCompleted = async () => {
+    const resolved_at = getCurrentTimestampTZ();
     await updateRequest({
       rejected: false,
       completed: true,
+      resolved_at,
     });
   };
 

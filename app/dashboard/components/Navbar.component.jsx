@@ -26,7 +26,7 @@ const Navbar = () => {
           </div>
           {navbarItems.length > 0 && (
             <>
-              <Flex className="space-x-8 hidden lg:flex" justifyContent="end">
+              <Flex className="space-x-8 hidden xl:flex" justifyContent="end">
                 {navbarItems.map((item) => (
                   <Link href={item.path} key={item.path}>
                     <Button color="slate" variant="light" className={`h-full`}>

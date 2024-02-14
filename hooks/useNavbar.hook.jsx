@@ -57,6 +57,10 @@ const useNavbar = (supabase) => {
       if (user.role.permission_level == "ADMIN") {
         setNavbarItems([
           {
+            title: "Dashboard",
+            path: "/dashboard",
+          },
+          {
             title: "Groups",
             path: "/dashboard/groups",
           },

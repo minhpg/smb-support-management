@@ -25,4 +25,8 @@ function timeSince(date) {
   return Math.floor(seconds) + " seconds";
 }
 
-export { timeSince };
+const getCurrentTimestampTZ = () => {
+  return new Date(Date.now()+(1000*60*(-(new Date()).getTimezoneOffset()))).toISOString().replace('T',' ').replace('Z','')
+}
+
+export { timeSince, getCurrentTimestampTZ };

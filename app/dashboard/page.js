@@ -1,14 +1,22 @@
-import { Card, Flex, Title } from "@tremor/react";
+import { Flex, Title } from "@tremor/react";
 
-const DashboardPage = () => {
-  return <>
-        <Flex>
+import RequestCountCards from "./components/RequestCountCards.component";
+import ProgressGraph from "./components/ProgressGraph.component";
+import LatestPendingRequestsTable from "./components/LatestPendingRequestsTable.component";
+import LateUpdatesTable from './components/LateUpdatesTable.component'
+
+const DashboardPage = async () => {
+  return (
+    <>
+      <Flex>
         <Title>Dashboard</Title>
       </Flex>
-      <Card className="mt-6">
-
-      </Card>
-  </>;
+      <RequestCountCards />
+      <ProgressGraph />
+      <LatestPendingRequestsTable />
+      <LateUpdatesTable />
+    </>
+  );
 };
 
 export default DashboardPage;
