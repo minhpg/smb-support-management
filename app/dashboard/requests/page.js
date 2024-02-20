@@ -10,6 +10,7 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
+  Text,
   Title,
 } from "@tremor/react";
 import Link from "next/link";
@@ -20,14 +21,15 @@ import RequestFilters from "./components/RequestFilters.component";
 import getUserProfile from "@/supabase/getUserProfile";
 
 const DashboardRequestsPage = async ({ searchParams }) => {
-
   const { supabase, user } = await getUserProfile();
 
   const permissionLevel = user.role.permission_level;
-  
+
   let query = supabase
     .from("requests")
-    .select("*, campus (name), from (id, first_name, last_name)");
+    .select("*, campus (name), from (id, first_name, last_name)", {
+      count: "exact",
+    });
 
   if (permissionLevel == "USER") {
     query = query.eq("from", user.id);
@@ -52,6 +54,7 @@ const DashboardRequestsPage = async ({ searchParams }) => {
     );
   }
 
+
   if (searchParams.order && searchParams.order_by) {
     if (searchParams.order == "asc") {
       query.order(searchParams.order_by, {
@@ -63,6 +66,10 @@ const DashboardRequestsPage = async ({ searchParams }) => {
         ascending: false,
       });
     }
+  } else {
+    query.order("created_at", {
+      ascending: false,
+    });
   }
 
   if (searchParams.status) {
@@ -81,6 +88,11 @@ const DashboardRequestsPage = async ({ searchParams }) => {
     query.eq("priority", searchParams.priority);
   }
 
+  const pageSize = 5;
+  const pageIndex = searchParams.page || 1;
+
+  query.range((pageIndex - 1) * pageSize, pageIndex * pageSize - 1);
+
   // if (searchParams.group) {
   //   const { data: respondGroups } = await supabase
   //   .from("respond_group_members")
@@ -94,10 +106,8 @@ const DashboardRequestsPage = async ({ searchParams }) => {
   //   );
   // }
 
-  const { data: requests, error } = await query;
-
-  console.log(error);
-
+  const { data: requests, count } = await query;
+  console.log(count);
   return (
     <>
       <Flex>
@@ -165,6 +175,31 @@ const DashboardRequestsPage = async ({ searchParams }) => {
           </TableBody>
         </Table>
       </Card>
+      <Flex className="p-5 w-full" justifyContent="between">
+        <Text className="w-full">
+          Page <b>{pageIndex}</b> - <b>{requests.length}</b> out of <b>{count}</b> records
+        </Text>
+        <Flex className="gap-3" justifyContent="end">
+          <Link
+            href={{
+              query: { ...searchParams, page: parseInt(pageIndex) - 1 },
+            }}
+          >
+            <Button variant="light" disabled={pageIndex <= 1}>
+              Prev
+            </Button>
+          </Link>
+          <Link
+            href={{
+              query: { ...searchParams, page: parseInt(pageIndex) + 1 },
+            }}
+          >
+            <Button variant="light" disabled={pageIndex >= count / pageSize}>
+              Next
+            </Button>
+          </Link>
+        </Flex>
+      </Flex>
     </>
   );
 };
