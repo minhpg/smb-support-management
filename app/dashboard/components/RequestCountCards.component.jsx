@@ -32,9 +32,10 @@ const RequestCountCards = async () => {
           </div>
         </Flex>
         <Flex className="mt-4 space-x-2">
-          <Text className="truncate">{`${
-            (totalPendingCount / totalRequestCount) * 100
-          }% pending`}</Text>
+          <Text className="truncate">{`${(
+            (totalPendingCount / totalRequestCount) *
+            100
+          ).toFixed(0)}% pending`}</Text>
           <Text className="truncate">
             {totalPendingCount}/{totalRequestCount}
           </Text>
@@ -52,9 +53,10 @@ const RequestCountCards = async () => {
           </div>
         </Flex>
         <Flex className="mt-4 space-x-2">
-          <Text className="truncate">{`${
-            (totalCompletedCount / totalRequestCount) * 100
-          }% completed`}</Text>
+          <Text className="truncate">{`${(
+            (totalCompletedCount / totalRequestCount) *
+            100
+          ).toFixed(0)}% completed`}</Text>
           <Text className="truncate">
             {totalCompletedCount}/{totalRequestCount}
           </Text>
@@ -73,9 +75,10 @@ const RequestCountCards = async () => {
           </div>
         </Flex>
         <Flex className="mt-4 space-x-2">
-          <Text className="truncate">{`${
-            (totalRejectedCount / totalRequestCount) * 100
-          }% rejected`}</Text>
+          <Text className="truncate">{`${(
+            (totalRejectedCount / totalRequestCount) *
+            100
+          ).toFixed(0)}% rejected`}</Text>
           <Text className="truncate">
             {totalRejectedCount}/{totalRequestCount}
           </Text>

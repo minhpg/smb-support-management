@@ -40,8 +40,9 @@ const UpdateTypeForm = ({ updateType: initUpdateType }) => {
     <>
       <form
         action={async (formData) => {
-          const { data: newUpdateType } =
-            await updateUpdateTypeFormAction(formData);
+          const { data: newUpdateType } = await updateUpdateTypeFormAction(
+            formData
+          );
           setUpdateType(newUpdateType);
           setSaved(true);
         }}
@@ -198,7 +199,7 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
           const approveGroups = data.map((group) => group.group);
           const approveIds = approveGroups.map((group) => group.id);
           const availableGroupsFiltered = availableGroups.filter(
-            (x) => !approveIds.includes(x.id),
+            (x) => !approveIds.includes(x.id)
           );
           setAvailableGroups(availableGroupsFiltered);
           setSelectedGroups(approveGroups);
@@ -210,16 +211,14 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
     setSaved(false);
     setSelectedGroups([...selectedGroups, group]);
     setAvailableGroups(
-      availableGroups.filter(
-        (availableGroup) => availableGroup.id !== group.id,
-      ),
+      availableGroups.filter((availableGroup) => availableGroup.id !== group.id)
     );
   };
 
   const handleDeleteGroup = (group) => {
     setSaved(false);
     setSelectedGroups(
-      selectedGroups.filter((selectedGroup) => selectedGroup.id !== group.id),
+      selectedGroups.filter((selectedGroup) => selectedGroup.id !== group.id)
     );
     setAvailableGroups([...availableGroups, group]);
   };

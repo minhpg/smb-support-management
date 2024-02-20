@@ -7,6 +7,7 @@ import {
   Col,
   Flex,
   Grid,
+  ProgressCircle,
   SearchSelect,
   SearchSelectItem,
   Select,
@@ -22,10 +23,12 @@ import useGroups from "@/hooks/useGroups.hook";
 import useCampuses from "@/hooks/useCampuses.hook";
 import usePreviews from "@/hooks/usePreviews.hook";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const CreateRequestForm = () => {
   const supabase = createClientComponentClient();
   const router = useRouter();
+  const [submittedLoading, setSubmittedLoading] = useState(false);
 
   const campuses = useCampuses(supabase);
 
@@ -35,8 +38,17 @@ const CreateRequestForm = () => {
 
   return (
     <>
+      {submittedLoading && (
+        <>
+          <div className="fixed inset-0 bg-black/30 z-40" aria-hidden="true" />
+          <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
+            <ProgressCircle value={50} />
+          </div>
+        </>
+      )}
       <form
         action={async (formData) => {
+          setSubmittedLoading(true);
           const response = await createRequestFormAction(formData);
           if (response) {
             router.replace("/dashboard/requests/" + response.data.id);

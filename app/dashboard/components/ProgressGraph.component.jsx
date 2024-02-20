@@ -32,7 +32,8 @@ const ProgressGraph = () => {
 
       let aggregatedDate = requestsData.map((request) => {
         const dateString = request.resolved_at || request.created_at;
-        const date = new Date(dateString).toDateString();
+        const dateObj = new Date(dateString)
+        const date = dateObj.toDateString();
         return {
           ...request,
           date,
@@ -44,7 +45,6 @@ const ProgressGraph = () => {
   }, [supabase]);
 
   const groupByDate = (objects) => {
-    console.log(objects);
     return objects.reduce((grouped, object) => {
       const { date } = object;
 
@@ -64,6 +64,7 @@ const ProgressGraph = () => {
 
       const aggregatedDataset = [];
       for (const [key, value] of Object.entries(aggregatedComplete)) {
+        console.log(value)
         const completedCount = value.filter((item) => item.completed).length;
         const rejectedCount = value.filter((item) => item.rejected).length;
         const pendingCount = value.filter(
@@ -71,17 +72,16 @@ const ProgressGraph = () => {
         ).length;
         aggregatedDataset.push({
           date: key,
+          ts: parseInt((new Date(key).getTime() / 1000).toFixed(0)),
           Completed: completedCount,
           Rejected: rejectedCount,
           Pending: pendingCount,
         });
       }
-
-      setAggregatedData(aggregatedDataset);
+      const sortedDataset = aggregatedDataset.sort((a, b) => a.ts - b.ts)
+      setAggregatedData(sortedDataset);
     }
   }, [data]);
-
-  console.log(aggreatedData);
 
   const graphProps = {
     data: aggreatedData,
