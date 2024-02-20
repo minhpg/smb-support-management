@@ -6,7 +6,7 @@ const useGroups = (supabase) => {
   useEffect(() => {
     supabase
       .from("groups")
-      .select("*, campus (name)")
+      .select("*, campus (id, name)")
       .then(({ data }) => {
         if (data) setGroups(data);
         setLoading(false);

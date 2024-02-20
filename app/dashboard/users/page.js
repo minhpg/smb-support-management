@@ -21,7 +21,6 @@ const DashboardUsersPage = async () => {
   return (
     <>
       <Title>Users</Title>
-      <Card className="mt-6"></Card>
       <Card className="mt-6">
         <Table>
           <TableHead>

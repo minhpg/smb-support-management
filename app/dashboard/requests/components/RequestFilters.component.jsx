@@ -6,21 +6,45 @@ import {
   Button,
   Card,
   Col,
+  DateRangePicker,
   Flex,
   Grid,
+  SearchSelect,
+  SearchSelectItem,
   Select,
   SelectItem,
   Text,
 } from "@tremor/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import useUsers from '@/hooks/useUsers.hook'
 
 const RequestFilters = ({ searchParams }) => {
   const supabase = createClientComponentClient();
-  // const { groups } = useGroups(supabase);
+  const { groups } = useGroups(supabase);
+  const { users } = useUsers(supabase)
   const campuses = useCampuses(supabase);
+
+  const router = useRouter();
+
+  const { from, to } = searchParams.date_range ? JSON.parse(searchParams.date_range) : { from: null, to: null}
+
+  const [dateRange, setDateRange] = useState({
+    from: new Date(from),
+    to: new Date(to)
+  });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    formData.set("date_range", JSON.stringify(dateRange));
+    const queryString = new URLSearchParams(formData).toString();
+    router.replace("/dashboard/requests?" + queryString);
+  };
 
   return (
     <Card className="mt-6">
-      <form method="get">
+      <form method="get" onSubmit={handleSubmit}>
         <Grid numItems={3} className="gap-3">
           <Col numColSpan={3} numColSpanLg={1}>
             <Text>Campus</Text>
@@ -48,16 +72,35 @@ const RequestFilters = ({ searchParams }) => {
               <SelectItem value="3">High</SelectItem>
             </Select>
           </Col>
-          {/* <Col>
-            <Text>Group</Text>
-            <Select name="group" defaultValue={searchParams.group}>
-              {groups.map((group) => (
-                <SelectItem key={group.id} value={group.id}>
-                  {`${group.name}${group.campus ? ` - ${group.campus.name}` : ""}`}
-                </SelectItem>
+          <Col numColSpan={3} numColSpanLg={1}>
+            <Text>Created by</Text>
+            <SearchSelect name="created_by" defaultValue={searchParams.created_by}>
+              {users.map((user) => (
+                <SearchSelectItem key={user.id} value={user.id}>
+                  { user.first_name } { user.last_name } - {user.campus ? user.campus.name : "No campus assigned"}
+                </SearchSelectItem>
               ))}
-            </Select>
-          </Col> */}
+            </SearchSelect>
+          </Col>
+          <Col numColSpan={3} numColSpanLg={1}>
+            <Text>Group</Text>
+            <SearchSelect name="group" defaultValue={searchParams.group}>
+              {groups.map((group) => (
+                <SearchSelectItem key={group.id} value={group.id}>
+                  {`${group.name}${group.campus ? ` - ${group.campus.name}` : ""}`}
+                </SearchSelectItem>
+              ))}
+            </SearchSelect>
+          </Col>
+          <Col numColSpan={3} numColSpanLg={1}>
+            <Text>Date range</Text>
+            <DateRangePicker
+              name="date-range"
+              value={dateRange}
+              onValueChange={setDateRange}
+              className="min-w-full"
+            />
+          </Col>
           <Col numColSpan={3} numColSpanLg={1}>
             <Text>Order</Text>
             <Select name="order" defaultValue={searchParams.order}>
@@ -65,12 +108,12 @@ const RequestFilters = ({ searchParams }) => {
               <SelectItem value="desc">Descending</SelectItem>
             </Select>
           </Col>
-          <Col numColSpan={3} numColSpanLg={1}>
+          <Col numColSpan={3} numColSpanLg={2}>
             <Text>Order by</Text>
             <Select name="order_by" defaultValue={searchParams.order_by}>
               <SelectItem value="priority">Priority</SelectItem>
               <SelectItem value="created_at">Created at</SelectItem>
-              <SelectItem value="request">Request</SelectItem>
+              <SelectItem value="resolved_at">Resolved at</SelectItem>
             </Select>
           </Col>
           <Col numColSpan={3} numColSpanLg={3}>

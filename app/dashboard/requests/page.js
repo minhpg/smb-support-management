@@ -54,7 +54,6 @@ const DashboardRequestsPage = async ({ searchParams }) => {
     );
   }
 
-
   if (searchParams.order && searchParams.order_by) {
     if (searchParams.order == "asc") {
       query.order(searchParams.order_by, {
@@ -70,6 +69,20 @@ const DashboardRequestsPage = async ({ searchParams }) => {
     query.order("created_at", {
       ascending: false,
     });
+  }
+
+  if (searchParams.date_range) {
+    const { from, to } = JSON.parse(searchParams.date_range);
+    // query.gte("created_at", from).lte("created_at", toDate.toISOString())
+
+    let fromDate = new Date(from);
+    fromDate.setDate(fromDate.getDate() - 1);
+    let toDate = new Date(to);
+    toDate.setDate(toDate.getDate() + 1);
+
+    query
+      .gte("created_at", fromDate.toISOString())
+      .lte("created_at", toDate.toISOString());
   }
 
   if (searchParams.status) {
@@ -88,26 +101,33 @@ const DashboardRequestsPage = async ({ searchParams }) => {
     query.eq("priority", searchParams.priority);
   }
 
-  const pageSize = 5;
+
+  if (searchParams.created_by) {
+    query.eq("from", searchParams.created_by);
+  }
+
+  const pageSize = 10;
   const pageIndex = searchParams.page || 1;
 
   query.range((pageIndex - 1) * pageSize, pageIndex * pageSize - 1);
 
-  // if (searchParams.group) {
-  //   const { data: respondGroups } = await supabase
-  //   .from("respond_group_members")
-  //   .select("respond_group")
-  //   .eq('group', searchParams.group)
+  if (searchParams.group) {
+    const { data: respondGroups } = await supabase
+    .from("respond_group_members")
+    .select("respond_group")
+    .eq('group', searchParams.group)
 
-  //  query = query.or(
-  //   respondGroups
-  //     .map(({ respond_group }) => `to.eq.${respond_group}`)
-  //     .join(",")
-  //   );
-  // }
+    if(respondGroups.length > 0){
+      query = query.or(
+        respondGroups
+          .map(({ respond_group }) => `to.eq.${respond_group}`)
+          .join(",")
+        );
+    }
+  }
 
-  const { data: requests, count } = await query;
-  console.log(count);
+  const { data: requests, count, error } = await query;
+
   return (
     <>
       <Flex>
@@ -123,6 +143,7 @@ const DashboardRequestsPage = async ({ searchParams }) => {
             <TableRow>
               <TableHeaderCell>Title</TableHeaderCell>
               <TableHeaderCell>Created at</TableHeaderCell>
+              <TableHeaderCell>Resolved at</TableHeaderCell>
               <TableHeaderCell>Created by</TableHeaderCell>
               <TableHeaderCell>Status</TableHeaderCell>
               <TableHeaderCell>Priority</TableHeaderCell>
@@ -140,6 +161,11 @@ const DashboardRequestsPage = async ({ searchParams }) => {
                 </TableCell>
                 <TableCell>
                   {new Date(request.created_at).toLocaleString("vi-vn")}
+                </TableCell>
+                <TableCell>
+                  {request.resolved_at
+                    ? new Date(request.resolved_at).toLocaleString("vi-vn")
+                    : "None"}
                 </TableCell>
                 <TableCell>
                   <Link href={`/dashboard/users/${request.from.id}`}>
@@ -176,9 +202,14 @@ const DashboardRequestsPage = async ({ searchParams }) => {
         </Table>
       </Card>
       <Flex className="p-5 w-full" justifyContent="between">
-        <Text className="w-full">
-          Page <b>{pageIndex}</b> - <b>{requests.length}</b> out of <b>{count}</b> records
+        <div className="w-full">
+        <Text>
+          Page <b>{pageIndex}</b>
         </Text>
+        <Text>
+        <b>{((pageIndex-1)*pageSize)+requests.length}</b> out of <b>{count}</b> records
+        </Text>
+        </div>
         <Flex className="gap-3" justifyContent="end">
           <Link
             href={{

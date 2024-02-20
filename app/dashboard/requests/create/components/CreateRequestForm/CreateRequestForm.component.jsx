@@ -17,13 +17,15 @@ import {
   Textarea,
   Title,
 } from "@tremor/react";
-import createRequestFormAction from "./createRequestFormAction";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import useGroups from "@/hooks/useGroups.hook";
 import useCampuses from "@/hooks/useCampuses.hook";
 import usePreviews from "@/hooks/usePreviews.hook";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+
+import createRequestFormAction from "./createRequestFormAction";
 
 const CreateRequestForm = () => {
   const supabase = createClientComponentClient();
@@ -32,9 +34,11 @@ const CreateRequestForm = () => {
 
   const campuses = useCampuses(supabase);
 
-  const { groups, loading: groupsLoading } = useGroups(supabase);
+  const { groups } = useGroups(supabase);
 
   const { previews, onSelectFile } = usePreviews();
+
+  const [selectedCampus, setSelectedCampus] = useState(null);
 
   return (
     <>
@@ -74,23 +78,47 @@ const CreateRequestForm = () => {
               <TextInput name="title" type="text" required />
             </Col>
             <Col numColSpan={2}>
-              <Text>To</Text>
-              <SearchSelect name="to" required defaultValue={null}>
-                {groups.map((group) => (
-                  <SearchSelectItem value={group.id} key={group.id}>
-                    {group.name} - {group.campus && group.campus.name}
-                  </SearchSelectItem>
-                ))}
-              </SearchSelect>
-            </Col>
-            <Col numColSpan={2}>
               <Text>Campus</Text>
-              <SearchSelect name="campus" required defaultValue={null}>
+              <SearchSelect
+                name="campus"
+                required
+                defaultValue={null}
+                onChange={setSelectedCampus}
+                value={selectedCampus}
+              >
                 {campuses.map((campus) => (
                   <SearchSelectItem value={campus.id} key={campus.id}>
                     {campus.name}
                   </SearchSelectItem>
                 ))}
+              </SearchSelect>
+            </Col>
+            <Col numColSpan={2}>
+              <Text>To</Text>
+              <SearchSelect name="to" required defaultValue={null}>
+                {selectedCampus &&
+                  groups.map((group) => {
+                    if (!group.campus) return null;
+                    if (group.campus.id !== selectedCampus) return null;
+
+                    return (
+                      <SearchSelectItem value={group.id} key={group.id}>
+                        {`${group.name}${
+                          group.campus ? ` - ${group.campus.name}` : ""
+                        }`}
+                      </SearchSelectItem>
+                    );
+                  })}
+                {!selectedCampus &&
+                  groups.map((group) => {
+                    return (
+                      <SearchSelectItem value={group.id} key={group.id}>
+                        {`${group.name}${
+                          group.campus ? ` - ${group.campus.name}` : ""
+                        }`}
+                      </SearchSelectItem>
+                    );
+                  })}
               </SearchSelect>
             </Col>
             <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>

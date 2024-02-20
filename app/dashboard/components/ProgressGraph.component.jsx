@@ -93,7 +93,7 @@ const ProgressGraph = () => {
   };
 
   return (
-    <Card className="mt-6">
+    <Card>
       <Title>Weekly progress</Title>
       <AreaChart className="mt-6" {...graphProps} />
     </Card>
