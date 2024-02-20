@@ -54,17 +54,17 @@ const CampusForm = ({ campus }) => {
         </Flex>
 
         <Grid
-          numItems={6}
+          numItems={2}
           numItemsMd={4}
           numItemsLg={6}
-          numItemsSm={3}
+          numItemsSm={2}
           className="gap-3 mt-6"
         >
-          <Col numColSpan={3}>
+          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
             <Text>Group name</Text>
             <TextInput name="name" type="text" defaultValue={campus?.name} />
           </Col>
-          <Col numColSpan={3}>
+          <Col numColSpan={2}>
             <Text>Address</Text>
             <TextInput
               name="address"
@@ -72,16 +72,18 @@ const CampusForm = ({ campus }) => {
               defaultValue={campus?.address}
             />
           </Col>
-          <Col numColSpan={3}>
+          <Col numColSpan={2}>
             <Text>Phone</Text>
             <TextInput name="phone" type="text" defaultValue={campus?.phone} />
           </Col>
-          <Col numColSpan={3}>
+          <Col numColSpan={2}>
             <Text>Email</Text>
             <TextInput name="email" type="email" defaultValue={campus?.email} />
           </Col>
-          <Col numColSpan={6}>
-            <Button>Submit</Button>
+          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
+            <Flex justifyContent="end">
+              <Button>Submit</Button>
+            </Flex>
           </Col>
         </Grid>
       </Card>

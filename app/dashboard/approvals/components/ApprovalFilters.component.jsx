@@ -20,7 +20,7 @@ const ApprovalFilters = ({ searchParams }) => {
     <Card className="mt-6">
       <form method="get">
         <Grid numItems={3} className="gap-3">
-          <Col>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Approval from</Text>
             <Select name="group" defaultValue={searchParams.group}>
               {groups.map((group) => (
@@ -30,7 +30,7 @@ const ApprovalFilters = ({ searchParams }) => {
               ))}
             </Select>
           </Col>
-          <Col>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Status</Text>
             <Select name="status" defaultValue={searchParams.status}>
               <SelectItem value="approved">Approved</SelectItem>
@@ -38,14 +38,14 @@ const ApprovalFilters = ({ searchParams }) => {
               <SelectItem value="pending">Pending</SelectItem>
             </Select>
           </Col>
-          <Col numColSpan={2}>
+          <Col numColSpan={3} numColSpanLg={2}>
             <Text>Order</Text>
             <Select name="order" defaultValue={searchParams.order}>
               <SelectItem value="asc">Ascending</SelectItem>
               <SelectItem value="desc">Descending</SelectItem>
             </Select>
           </Col>
-          <Col>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Order by</Text>
             <Select name="order_by" defaultValue={searchParams.order_by}>
               <SelectItem value="index">Priority</SelectItem>
@@ -53,7 +53,7 @@ const ApprovalFilters = ({ searchParams }) => {
               <SelectItem value="request">Request</SelectItem>
             </Select>
           </Col>
-          <Col numColSpan={3}>
+          <Col numColSpan={3} numColSpanLg={3}>
             <Flex justifyContent="end">
               <Button>Submit</Button>
             </Flex>

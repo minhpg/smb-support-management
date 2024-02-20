@@ -38,10 +38,10 @@ const CreateGroupForm = ({ user }) => {
             <Button>Submit</Button>
           </Flex>
           <Grid
-            numItems={6}
+            numItems={2}
             numItemsMd={4}
             numItemsLg={6}
-            numItemsSm={3}
+            numItemsSm={2}
             className="gap-3 mt-6"
           >
             <Col numColSpan={2}>

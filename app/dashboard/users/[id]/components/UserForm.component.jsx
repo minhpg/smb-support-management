@@ -68,11 +68,11 @@ const UserForm = ({ user }) => {
       <Card>
         <Flex>
           <Flex className="gap-3" justifyContent="start">
-            <Title>User {user.id}</Title>
+            {/* <Title>User {user.id}</Title> */}
             {user.verified ? (
-              <Badge color="green">Verified</Badge>
+              <Badge color="green">User Verified</Badge>
             ) : (
-              <Badge color="red">Not verified</Badge>
+              <Badge color="red">User Not verified</Badge>
             )}
           </Flex>
           <Text>{saved ? "Saved" : "Not saved"}</Text>
@@ -83,13 +83,13 @@ const UserForm = ({ user }) => {
           onChange={() => setSaved(false)}
         >
           <Grid
-            numItems={6}
+            numItems={2}
             numItemsMd={4}
             numItemsLg={6}
-            numItemsSm={3}
+            numItemsSm={2}
             className="gap-3"
           >
-            <Col numColSpan={3}>
+            <Col numColSpan={2}>
               <Text>First Name</Text>
               <TextInput
                 name="first_name"
@@ -97,7 +97,7 @@ const UserForm = ({ user }) => {
                 defaultValue={user?.first_name}
               />
             </Col>
-            <Col numColSpan={3}>
+            <Col numColSpan={2}>
               <Text>Last Name</Text>
               <TextInput
                 name="last_name"
@@ -105,7 +105,7 @@ const UserForm = ({ user }) => {
                 defaultValue={user?.last_name}
               />
             </Col>
-            <Col numColSpan={6}>
+            <Col numColSpan={2} numColSpanMd={3}>
               <Text>Email</Text>
               <TextInput
                 name="email"
@@ -114,7 +114,7 @@ const UserForm = ({ user }) => {
                 readOnly
               />
             </Col>
-            <Col numColSpan={4}>
+            <Col numColSpan={2} numColSpanMd={3}>
               <Text>Phone</Text>
               <TextInput
                 name="phone"
@@ -123,7 +123,7 @@ const UserForm = ({ user }) => {
                 defaultValue={user?.phone}
               />
             </Col>
-            <Col numColSpan={3}>
+            <Col numColSpan={2} numColSpanMd={4}>
               <Text>Campus</Text>
               <SearchSelect name="campus" defaultValue={user?.campus}>
                 <SearchSelectItem value={null}>Unallocated</SearchSelectItem>
@@ -134,7 +134,7 @@ const UserForm = ({ user }) => {
                 ))}
               </SearchSelect>
             </Col>
-            <Col numColSpan={3}>
+            <Col numColSpan={2} numColSpanMd={3}>
               <Text>Role</Text>
               <SearchSelect name="role" defaultValue={user?.role}>
                 {roles.map((role) => (
@@ -144,7 +144,7 @@ const UserForm = ({ user }) => {
                 ))}
               </SearchSelect>
             </Col>
-            <Col numColSpan={6}>
+            <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
               <Flex>
                 <Button>Save</Button>
                 <Flex className="gap-3" justifyContent="end">

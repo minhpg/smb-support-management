@@ -52,13 +52,13 @@ const AccountForm = ({ authUser, user }) => {
           onChange={() => setSaved(false)}
         >
           <Grid
-            numItems={6}
+            numItems={2}
             numItemsMd={4}
             numItemsLg={6}
-            numItemsSm={3}
+            numItemsSm={2}
             className="gap-3"
           >
-            <Col numColSpan={3}>
+            <Col numColSpan={2}>
               <Text>First Name</Text>
               <TextInput
                 name="first_name"
@@ -66,7 +66,7 @@ const AccountForm = ({ authUser, user }) => {
                 defaultValue={user?.first_name}
               />
             </Col>
-            <Col numColSpan={3}>
+            <Col numColSpan={2}>
               <Text>Last Name</Text>
               <TextInput
                 name="last_name"
@@ -74,7 +74,7 @@ const AccountForm = ({ authUser, user }) => {
                 defaultValue={user?.last_name}
               />
             </Col>
-            <Col numColSpan={6}>
+            <Col numColSpan={2} numColSpanMd={3}>
               <Text>Email</Text>
               <TextInput
                 name="email"
@@ -83,7 +83,7 @@ const AccountForm = ({ authUser, user }) => {
                 readOnly
               />
             </Col>
-            <Col numColSpan={3}>
+            <Col numColSpan={2} numColSpanMd={3}>
               <Text>Phone</Text>
               <TextInput
                 name="phone"
@@ -92,7 +92,7 @@ const AccountForm = ({ authUser, user }) => {
                 defaultValue={user?.phone}
               />
             </Col>
-            <Col numColSpan={3}>
+            <Col numColSpan={2} numColSpanMd={4}>
               <Text>Campus</Text>
               <SearchSelect name="campus" defaultValue={user?.campus}>
                 {campuses.map((campus) => (
@@ -102,8 +102,10 @@ const AccountForm = ({ authUser, user }) => {
                 ))}
               </SearchSelect>
             </Col>
-            <Col numColSpan={6}>
+            <Col numColSpan={2}  numColSpanMd={4} numColSpanLg={6}>
+              <Flex justifyContent="end">
               <Button>Save</Button>
+              </Flex>
             </Col>
           </Grid>
         </form>

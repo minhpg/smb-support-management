@@ -115,17 +115,17 @@ const GroupForm = ({ group }) => {
         </Flex>
 
         <Grid
-          numItems={6}
+          numItems={2}
           numItemsMd={4}
           numItemsLg={6}
-          numItemsSm={3}
+          numItemsSm={2}
           className="gap-3 mt-6"
         >
-          <Col numColSpan={3}>
+          <Col numColSpan={2}>
             <Text>Group name</Text>
             <TextInput name="name" type="text" defaultValue={group?.name} />
           </Col>
-          <Col numColSpan={3}>
+          <Col numColSpan={2}>
             <Text>Campus</Text>
             <SearchSelect name="campus" defaultValue={group?.campus}>
               {campuses.map((campus) => (
@@ -135,8 +135,10 @@ const GroupForm = ({ group }) => {
               ))}
             </SearchSelect>
           </Col>
-          <Col numColSpan={6}>
+          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
+            <Flex justifyContent="end">
             <Button>Submit</Button>
+            </Flex>
           </Col>
         </Grid>
       </Card>

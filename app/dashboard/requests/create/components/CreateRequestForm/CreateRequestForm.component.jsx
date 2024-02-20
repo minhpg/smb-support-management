@@ -63,7 +63,7 @@ const CreateRequestForm = () => {
             </Flex>
           </Flex>
           <Grid
-            numItems={6}
+            numItems={2}
             numItemsMd={4}
             numItemsLg={6}
             numItemsSm={2}
@@ -93,7 +93,7 @@ const CreateRequestForm = () => {
                 ))}
               </SearchSelect>
             </Col>
-            <Col numColSpan={6}>
+            <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
               <Text>Description</Text>
               <Textarea
                 name="description"
@@ -115,11 +115,11 @@ const CreateRequestForm = () => {
                 <SelectItem value="3">High</SelectItem>
               </Select>
             </Col>
-            <Col numColSpan={4}>
+            <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
               <Text>Location</Text>
               <TextInput name="location" type="text" required />
             </Col>
-            <Col numColSpan={6}>
+            <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
               <Text>Attach media</Text>
               <Text>
                 <input
@@ -132,7 +132,7 @@ const CreateRequestForm = () => {
               </Text>
             </Col>
             {previews.length > 0 && (
-              <Col numColSpan={6}>
+              <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
                 <Grid
                   className="gap-3"
                   numItems={2}

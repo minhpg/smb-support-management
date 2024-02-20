@@ -53,7 +53,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
           <DeleteButton requestId={request.id} />
         </Flex>
         <Grid
-          numItems={6}
+          numItems={2}
           numItemsMd={4}
           numItemsLg={6}
           numItemsSm={2}
@@ -89,9 +89,9 @@ const DashboardUpdateRequestPage = async ({ params }) => {
             <Text className="py-2 text-black">{request.campus.name}</Text>
           </Col>
 
-          <Col numColSpan={6}>
+          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
             <Text>To</Text>
-            <Flex className="py-2">
+            <Flex className="py-2 text-ellipsis overflow-hidden">
               {respondGroupMembers.map((respondGroup) => (
                 <Badge key={respondGroup.group.id}>
                   {respondGroup.group.name} - {respondGroup.group.campus.name}
@@ -99,13 +99,13 @@ const DashboardUpdateRequestPage = async ({ params }) => {
               ))}
             </Flex>
           </Col>
-          <Col numColSpan={6}>
+          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
             <Text>Description</Text>
             <Text className="py-2 text-black">{request.description}</Text>
           </Col>
           {request.media && <LoadMedia mediaId={request.media} />}
-          <Col numColSpan={6}>
-            <Flex justifyContent="end" className="gap-3">
+          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
+            <Flex justifyContent="end" className="gap-3 flex-wrap">
               <ChangeRequestStatus requestId={request.id} />
             </Flex>
           </Col>
