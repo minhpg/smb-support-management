@@ -48,7 +48,6 @@ const CreateRequestForm = () => {
       )}
       <form
         action={async (formData) => {
-          setSubmittedLoading(true);
           const response = await createRequestFormAction(formData);
           if (response) {
             router.replace("/dashboard/requests/" + response.data.id);
@@ -59,7 +58,7 @@ const CreateRequestForm = () => {
           <Flex>
             <Title className="w-full">New Request</Title>
             <Flex className="gap-3" justifyContent="end">
-              <Button>Submit</Button>
+              <Button onClick={() => setSubmittedLoading(true)}>Submit</Button>
               <Button color="red">Cancel</Button>
             </Flex>
           </Flex>

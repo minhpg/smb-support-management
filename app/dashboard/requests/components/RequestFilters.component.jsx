@@ -15,14 +15,14 @@ import {
 
 const RequestFilters = ({ searchParams }) => {
   const supabase = createClientComponentClient();
-  const { groups } = useGroups(supabase);
+  // const { groups } = useGroups(supabase);
   const campuses = useCampuses(supabase);
 
   return (
     <Card className="mt-6">
       <form method="get">
         <Grid numItems={3} className="gap-3">
-          <Col>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Campus</Text>
             <Select name="campus" defaultValue={searchParams.campus}>
               {campuses.map((campus) => (
@@ -32,7 +32,7 @@ const RequestFilters = ({ searchParams }) => {
               ))}
             </Select>
           </Col>
-          <Col>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Status</Text>
             <Select name="status" defaultValue={searchParams.status}>
               <SelectItem value="completed">Completed</SelectItem>
@@ -40,7 +40,7 @@ const RequestFilters = ({ searchParams }) => {
               <SelectItem value="pending">Pending</SelectItem>
             </Select>
           </Col>
-          <Col>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Priority</Text>
             <Select name="priority" defaultValue={searchParams.priority}>
               <SelectItem value="1">Low</SelectItem>
@@ -58,14 +58,14 @@ const RequestFilters = ({ searchParams }) => {
               ))}
             </Select>
           </Col> */}
-          <Col>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Order</Text>
             <Select name="order" defaultValue={searchParams.order}>
               <SelectItem value="asc">Ascending</SelectItem>
               <SelectItem value="desc">Descending</SelectItem>
             </Select>
           </Col>
-          <Col>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Order by</Text>
             <Select name="order_by" defaultValue={searchParams.order_by}>
               <SelectItem value="priority">Priority</SelectItem>
@@ -73,7 +73,7 @@ const RequestFilters = ({ searchParams }) => {
               <SelectItem value="request">Request</SelectItem>
             </Select>
           </Col>
-          <Col numColSpan={3}>
+          <Col numColSpan={3} numColSpanLg={3}>
             <Flex justifyContent="end">
               <Button>Submit</Button>
             </Flex>
