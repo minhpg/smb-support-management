@@ -38,7 +38,7 @@ const CreateRequestForm = () => {
 
   const { previews, onSelectFile } = usePreviews();
 
-  const [selectedCampus, setSelectedCampus] = useState(null);
+  const [selectedCampus, setSelectedCampus] = useState("");
 
   return (
     <>
@@ -62,7 +62,7 @@ const CreateRequestForm = () => {
           <Flex>
             <Title className="w-full">New Request</Title>
             <Flex className="gap-3" justifyContent="end">
-              <Button onClick={() => setSubmittedLoading(true)}>Submit</Button>
+              <Button>Submit</Button>
               <Button color="red">Cancel</Button>
             </Flex>
           </Flex>
@@ -74,19 +74,22 @@ const CreateRequestForm = () => {
             className="gap-3 mt-6"
           >
             <Col numColSpan={2}>
-              <Text>Title</Text>
+              <Text>
+                Title<span className="text-red-500">*</span>
+              </Text>
               <TextInput name="title" type="text" required />
             </Col>
             <Col numColSpan={2}>
-              <Text>Campus</Text>
+              <Text>
+                Campus<span className="text-red-500">*</span>
+              </Text>
               <SearchSelect
                 name="campus"
-                required
-                defaultValue={null}
+                required={true}
                 onChange={setSelectedCampus}
                 value={selectedCampus}
               >
-                {campuses.map((campus) => (
+                {campuses.length > 0 && campuses.map((campus) => (
                   <SearchSelectItem value={campus.id} key={campus.id}>
                     {campus.name}
                   </SearchSelectItem>
@@ -94,8 +97,10 @@ const CreateRequestForm = () => {
               </SearchSelect>
             </Col>
             <Col numColSpan={2}>
-              <Text>To</Text>
-              <SearchSelect name="to" required defaultValue={null}>
+              <Text>
+                To<span className="text-red-500">*</span>
+              </Text>
+              <SearchSelect name="to" required={true} defaultValue={""}>
                 {selectedCampus &&
                   groups.map((group) => {
                     if (!group.campus) return null;
@@ -122,7 +127,9 @@ const CreateRequestForm = () => {
               </SearchSelect>
             </Col>
             <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
-              <Text>Description</Text>
+              <Text>
+                Description<span className="text-red-500">*</span>
+              </Text>
               <Textarea
                 name="description"
                 type="text"
@@ -144,7 +151,9 @@ const CreateRequestForm = () => {
               </Select>
             </Col>
             <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
-              <Text>Location</Text>
+              <Text>
+                Location<span className="text-red-500">*</span>
+              </Text>
               <TextInput name="location" type="text" required />
             </Col>
             <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>

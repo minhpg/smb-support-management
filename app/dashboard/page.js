@@ -4,11 +4,32 @@ import RequestCountCards from "./components/RequestCountCards.component";
 import ProgressGraph from "./components/ProgressGraph.component";
 import LatestPendingRequestsTable from "./components/LatestPendingRequestsTable.component";
 import LateUpdatesTable from "./components/LateUpdatesTable.component";
-import RequestsCountChart from './components/RequestsCountChart.component'
+import RequestsCountChart from "./components/RequestsCountChart.component";
 import getSession from "@/supabase/getSession";
+import { Suspense } from "react";
+import { LoadingCard } from "./loading";
 
 const DashboardPage = async () => {
   const { supabase } = await getSession();
+  return (
+    <>
+      <Flex>
+        <Title>Dashboard</Title>
+      </Flex>
+      <Suspense fallback={<LoadingCard />}>
+        <StatisticsBody supabase={supabase} />
+      </Suspense>
+      <Suspense fallback={<LoadingCard />}>
+        <LatestPendingRequestsTable supabase={supabase} />
+      </Suspense>
+      <Suspense fallback={<LoadingCard />}>
+        <LateUpdatesTable supabase={supabase} />
+      </Suspense>
+    </>
+  );
+};
+
+const StatisticsBody = async ({ supabase }) => {
   const { count: totalRequestCount } = await supabase
     .from("requests")
     .select("*", { count: "exact", head: true });
@@ -57,9 +78,6 @@ const DashboardPage = async () => {
 
   return (
     <>
-      <Flex>
-        <Title>Dashboard</Title>
-      </Flex>
       <RequestCountCards {...cardsData} />
       <Grid className="gap-3 mt-6" numItems={1} numItemsLg={2}>
         <Col>
@@ -73,8 +91,6 @@ const DashboardPage = async () => {
           />
         </Col>
       </Grid>
-      <LatestPendingRequestsTable />
-      <LateUpdatesTable />
     </>
   );
 };

@@ -15,9 +15,9 @@ import {
 
 import Link from "next/link";
 import RequestStatus from "@/app/dashboard/requests/components/RequestStatus.component";
+import DateFormat from "./DateFormat.component";
 
-const LatestPendingRequestsTable = async () => {
-  const { supabase } = await getSession();
+const LatestPendingRequestsTable = async ({ supabase }) => {
   const { data: requests } = await supabase
     .from("requests")
     .select("*, campus (name), from (id, first_name, last_name)")
@@ -53,7 +53,7 @@ const LatestPendingRequestsTable = async () => {
                 </Link>
               </TableCell>
               <TableCell>
-                {new Date(request.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
+               <DateFormat date={request.created_at} />
               </TableCell>
               <TableCell>
                 <Link href={`/dashboard/users/${request.from.id}`}>

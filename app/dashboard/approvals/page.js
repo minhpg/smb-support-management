@@ -12,35 +12,44 @@ import ApprovalRow from "./components/ApprovalRow.component";
 import ApprovalFilters from "./components/ApprovalFilters.component";
 
 import getUserProfile from "@/supabase/getUserProfile";
+import { Suspense } from "react";
+import { LoadingCard } from "../loading";
 
 const DashboardUpdatesApprovalPage = async ({ searchParams }) => {
+  return (
+    <>
+      <Title>Approvals</Title>
+      <ApprovalFilters searchParams={searchParams} />
+      <Suspense fallback={<LoadingCard />}>
+        <ApprovalsBody searchParams={searchParams} />
+      </Suspense>
+    </>
+  );
+};
+
+const ApprovalsBody = async ({ searchParams }) => {
   const { supabase, user } = await getUserProfile();
   let query = supabase
     .from("update_approvals")
     .select(
       "*, update(*, request(*, to, from(id, first_name, last_name, email, phone), campus (id, name)), update_type (*), created_by (*)), group (*, campus(*))"
-    );
+    )
+    .is("update.request.completed", false)
+    .is("update.request.rejected", false);
 
   const permissionLevel = user.role.permission_level;
 
   if (permissionLevel == "MODERATOR") {
-    
-      // check moderator groups
-      // const { data: groups } = await supabase
-      //   .from("group_members")
-      //   .select("group")
-      //   .eq("user", user.id);
-  
-      // const { data: respondGroups } = await supabase
-      //   .from("respond_group_members")
-      //   .select("respond_group")
-      //   .or(groups.map(({ group }) => `group.eq.${group}`).join(","));
-  
-      // query = query.or(
-      //   respondGroups
-      //     .map(({ respond_group }) => `update.request.to.eq.${respond_group}`)
-      //     .join(",")
-      // );
+    // check moderator groups
+    const { data: groups } = await supabase
+      .from("group_members")
+      .select("group")
+      .eq("user", user.id);
+
+    const groupIds = groups.map(({ group }) => group);
+    console.log(groupIds);
+
+    query = query.in("group", groupIds);
   }
 
   if (searchParams.order && searchParams.order_by) {
@@ -73,33 +82,29 @@ const DashboardUpdatesApprovalPage = async ({ searchParams }) => {
   }
 
   const { data: approvals, error } = await query;
-
-  console.log(error)
-
+  console.log(approvals, error);
   return (
-    <>
-      <Title>Approvals</Title>
-      <ApprovalFilters searchParams={searchParams} />
-      <Card className="mt-6">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Update</TableHeaderCell>
-              <TableHeaderCell>Created at</TableHeaderCell>
-              <TableHeaderCell>Request</TableHeaderCell>
-              <TableHeaderCell>Needs approval from</TableHeaderCell>
-              <TableHeaderCell>Status</TableHeaderCell>
-              <TableHeaderCell></TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {approvals.map((approval) => (
+    <Card className="mt-6">
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>Update</TableHeaderCell>
+            <TableHeaderCell>Created at</TableHeaderCell>
+            <TableHeaderCell>Request</TableHeaderCell>
+            <TableHeaderCell>Needs approval from</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell></TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {approvals
+            .filter((approval) => approval.update.request)
+            .map((approval) => (
               <ApprovalRow approval={approval} key={approval.id} />
             ))}
-          </TableBody>
-        </Table>
-      </Card>
-    </>
+        </TableBody>
+      </Table>
+    </Card>
   );
 };
 

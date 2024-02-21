@@ -20,6 +20,8 @@ import DeleteButton from "@/app/dashboard/requests/components/DeleteButton.compo
 import { timeSince } from "@/utils";
 import getUserProfile from "@/supabase/getUserProfile";
 import DateFormat from "../../components/DateFormat.component";
+import Loading from "../../loading";
+import { Suspense } from "react";
 
 const DashboardUpdateRequestPage = async ({ params }) => {
   const { supabase, user } = await getUserProfile();
@@ -87,7 +89,9 @@ const DashboardUpdateRequestPage = async ({ params }) => {
           </Col>
           <Col numColSpan={2}>
             <Text>Campus</Text>
-            <Text className="py-2 text-black">{request.campus.name}</Text>
+            <Text className="py-2 text-black">
+              {request.campus ? request.campus.name : "None"}
+            </Text>
           </Col>
 
           <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
@@ -98,6 +102,9 @@ const DashboardUpdateRequestPage = async ({ params }) => {
                   {respondGroup.group.name} - {respondGroup.group.campus.name}
                 </Badge>
               ))}
+              {respondGroupMembers.length == 0 && (
+                <Text className="py-2 text-black">None</Text>
+              )}
             </Flex>
           </Col>
           <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
@@ -120,18 +127,20 @@ const DashboardUpdateRequestPage = async ({ params }) => {
               {allowCreateUpdate && (
                 <CreateUpdate
                   requestId={request.id}
-                  campusId={request.campus.id}
+                  campusId={request.campus ? request.campus.id : null}
                 />
               )}
             </>
           )}
         </Flex>
         <div className="mt-6">
-          <LoadUpdate
-            supabase={supabase}
-            requestId={request.id}
-            requestLocked={request.completed || request.rejected}
-          />
+          <Suspense fallback={<Loading />}>
+            <LoadUpdate
+              supabase={supabase}
+              requestId={request.id}
+              requestLocked={request.completed || request.rejected}
+            />
+          </Suspense>
         </div>
       </Card>
     </>

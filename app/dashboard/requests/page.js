@@ -14,13 +14,32 @@ import {
   Title,
 } from "@tremor/react";
 import Link from "next/link";
-import DateFormat from '../components/DateFormat.component'
-import RequestStatus from './components/RequestStatus.component'
-import DeleteButton from './components/DeleteButton.component'
+import DateFormat from "../components/DateFormat.component";
+import RequestStatus from "./components/RequestStatus.component";
+import DeleteButton from "./components/DeleteButton.component";
 import RequestFilters from "./components/RequestFilters.component";
 import getUserProfile from "@/supabase/getUserProfile";
+import { Suspense } from "react";
+import { LoadingCard } from "../loading";
 
-const DashboardRequestsPage = async ({ searchParams }) => {
+const DashboardRequestsPage = ({ searchParams }) => {
+  return (
+    <>
+      <Flex>
+        <Title>Requests</Title>
+        <Link href="/dashboard/requests/create">
+          <Button variant="light">Create request</Button>
+        </Link>
+      </Flex>
+      <RequestFilters searchParams={searchParams} />
+      <Suspense fallback={<LoadingCard />}>
+        <RequestsTable searchParams={searchParams} />
+      </Suspense>
+    </>
+  );
+};
+
+const RequestsTable = async ({ searchParams }) => {
   const { supabase, user } = await getUserProfile();
 
   const permissionLevel = user.role.permission_level;
@@ -73,16 +92,18 @@ const DashboardRequestsPage = async ({ searchParams }) => {
 
   if (searchParams.date_range) {
     const { from, to } = JSON.parse(searchParams.date_range);
-    // query.gte("created_at", from).lte("created_at", toDate.toISOString())
 
-    let fromDate = new Date(from);
-    fromDate.setDate(fromDate.getDate() - 1);
-    let toDate = new Date(to);
-    toDate.setDate(toDate.getDate() + 1);
+    if (from) {
+      let fromDate = new Date(from);
+      fromDate.setDate(fromDate.getDate() - 1);
+      query.gte("created_at", fromDate.toISOString());
+    }
 
-    query
-      .gte("created_at", fromDate.toISOString())
-      .lte("created_at", toDate.toISOString());
+    if (to) {
+      let toDate = new Date(to);
+      toDate.setDate(toDate.getDate() + 1);
+      query.lte("created_at", toDate.toISOString());
+    }
   }
 
   if (searchParams.status) {
@@ -129,13 +150,6 @@ const DashboardRequestsPage = async ({ searchParams }) => {
 
   return (
     <>
-      <Flex>
-        <Title>Requests</Title>
-        <Link href="/dashboard/requests/create">
-          <Button variant="light">Create request</Button>
-        </Link>
-      </Flex>
-      <RequestFilters searchParams={searchParams} />
       <Card className="mt-6">
         <Table>
           <TableHead>
@@ -197,7 +211,7 @@ const DashboardRequestsPage = async ({ searchParams }) => {
             ))}
           </TableBody>
         </Table>
-      </Card>
+      </Card>{" "}
       <Flex className="p-5 w-full" justifyContent="between">
         <div className="w-full">
           <Text>

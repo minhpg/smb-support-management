@@ -18,15 +18,16 @@ import DeadlineBadge from "@/app/dashboard/requests/components/DeadlineBadge.com
 import { getCurrentTimestampTZ } from "@/utils";
 import DateFormat from "./DateFormat.component";
 
-const LateUpdatesTable = async () => {
-  const { supabase } = await getSession();
-  const { data: updates } = await supabase
+const LateUpdatesTable = async ({ supabase }) => {
+  const { data: updates, error } = await supabase
     .from("updates")
     .select(
-      "*, created_by (id, first_name, last_name), update_type(*), request(*)"
+      "*, created_by (id, first_name, last_name), update_type(*), request(*, completed)"
     )
+    .lte("deadline", getCurrentTimestampTZ())
+    .is("request.completed", false)
+    .is("request.rejected", false)
     .eq("fulfilled", false)
-    .lte("deadline", getCurrentTimestampTZ());
 
   return (
     <Card className="mt-6">
@@ -43,7 +44,7 @@ const LateUpdatesTable = async () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {updates.map((update) => (
+          {updates.filter((update => update.request)).map((update) => (
             <TableRow key={update.id}>
               <TableCell>
                 <Button variant="light">{update.update_type.title}</Button>

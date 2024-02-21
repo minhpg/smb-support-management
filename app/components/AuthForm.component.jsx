@@ -12,7 +12,7 @@ const AuthForm = () => {
     <div className="flex flex-col h-screen justify-center w-screen">
       <div className="flex justify-center w-full">
         <div>
-          <Logo />
+          <div className="flex w-full justify-center"><Logo /></div>
           <Auth
             supabaseClient={supabase}
             view="magic_link"
