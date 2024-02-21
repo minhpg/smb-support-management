@@ -10,7 +10,6 @@ const DeleteButton = ({ requestId }) => {
 
   const handleDelete = async () => {
     await supabase.from("requests").delete().eq("id", requestId);
-    router.replace("/dashboard/requests");
     router.refresh();
   };
 

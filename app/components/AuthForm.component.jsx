@@ -19,7 +19,7 @@ const AuthForm = () => {
             appearance={{ theme: ThemeSupa }}
             theme="light"
             showLinks={false}
-            providers={[]}
+            providers={['azure']}
             redirectTo={`${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`}
           />
         </div>

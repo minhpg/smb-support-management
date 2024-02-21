@@ -22,6 +22,7 @@ import getUserProfile from "@/supabase/getUserProfile";
 import DateFormat from "../../components/DateFormat.component";
 import Loading from "../../loading";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
 const DashboardUpdateRequestPage = async ({ params }) => {
   const { supabase, user } = await getUserProfile();
@@ -37,7 +38,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
   if (user.role.permission_level == "USER") allowCreateUpdate = false;
 
   if (!request) {
-    return <Text>Request not found!</Text>;
+    redirect('/dashboard/requests')
   }
 
   const { data: respondGroupMembers } = await supabase
