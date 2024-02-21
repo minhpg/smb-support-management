@@ -19,6 +19,7 @@ import LoadRequestItems from "@/app/dashboard/requests/[id]/components/LoadReque
 import LoadMedia from "@/app/dashboard/requests/[id]/components/LoadMedia.component";
 
 import { timeSince } from "@/utils";
+import DateFormat from "../../components/DateFormat.component";
 
 const ApprovalRow = ({ approval }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -54,7 +55,7 @@ const ApprovalRow = ({ approval }) => {
       <TableRow>
         <TableCell>{update.update_type.title}</TableCell>
         <TableCell>
-          {new Date(update.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
+          <DateFormat date={update.created_at}/>
         </TableCell>
         <TableCell>
           <Link href={`/dashboard/requests/${approval.update.request.id}`}>
@@ -122,7 +123,7 @@ const ApprovalRow = ({ approval }) => {
               <Col numColSpan={2}>
                 <Text>Created at</Text>
                 <Text className="py-2 text-black">
-                  {new Date(request.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })} (
+                <DateFormat date={request.created_at}/>
                   {timeSince(new Date(request.created_at))} ago)
                 </Text>
               </Col>
@@ -154,7 +155,7 @@ const ApprovalRow = ({ approval }) => {
                 <Col numColSpan={6}>
                   <Text>Expected fulfill date</Text>
                   <Text className="text-black py-2">
-                    {new Date(update.deadline).toLocaleDateString("vi-vn")}
+                  <DateFormat date={update.deadline}/>
                   </Text>
                 </Col>
               )}

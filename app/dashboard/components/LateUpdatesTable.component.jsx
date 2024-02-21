@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import DeadlineBadge from "@/app/dashboard/requests/components/DeadlineBadge.component";
 import { getCurrentTimestampTZ } from "@/utils";
+import DateFormat from "./DateFormat.component";
 
 const LateUpdatesTable = async () => {
   const { supabase } = await getSession();
@@ -25,7 +26,7 @@ const LateUpdatesTable = async () => {
       "*, created_by (id, first_name, last_name), update_type(*), request(*)"
     )
     .eq("fulfilled", false)
-    .lte('deadline', getCurrentTimestampTZ())
+    .lte("deadline", getCurrentTimestampTZ());
 
   return (
     <Card className="mt-6">
@@ -53,12 +54,10 @@ const LateUpdatesTable = async () => {
                 </Link>
               </TableCell>
               <TableCell>
-                {new Date(update.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
+                <DateFormat date={update.created_at} />
               </TableCell>
               <TableCell>
-                {update.deadline
-                  ? new Date(update.deadline).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })
-                  : "None"}
+                <DateFormat date={update.deadline} />
               </TableCell>
               <TableCell>
                 <Link href={`/dashboard/users/${update.created_by.id}`}>
@@ -68,7 +67,11 @@ const LateUpdatesTable = async () => {
                 </Link>
               </TableCell>
               <TableCell>
-                { update.deadline ? <DeadlineBadge deadline={update.deadline} /> : "None"}
+                {update.deadline ? (
+                  <DeadlineBadge deadline={update.deadline} />
+                ) : (
+                  "None"
+                )}
               </TableCell>
             </TableRow>
           ))}

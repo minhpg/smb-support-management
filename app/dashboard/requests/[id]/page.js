@@ -19,6 +19,7 @@ import DeleteButton from "@/app/dashboard/requests/components/DeleteButton.compo
 
 import { timeSince } from "@/utils";
 import getUserProfile from "@/supabase/getUserProfile";
+import DateFormat from "../../components/DateFormat.component";
 
 const DashboardUpdateRequestPage = async ({ params }) => {
   const { supabase, user } = await getUserProfile();
@@ -76,7 +77,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
           <Col numColSpan={2}>
             <Text>Created at</Text>
             <Text className="py-2 text-black">
-              {new Date(request.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })} (
+              <DateFormat date={request.created_at} /> (
               {timeSince(new Date(request.created_at))} ago)
             </Text>
           </Col>

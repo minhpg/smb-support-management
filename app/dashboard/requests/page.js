@@ -14,9 +14,9 @@ import {
   Title,
 } from "@tremor/react";
 import Link from "next/link";
-
-import RequestStatus from "./components/RequestStatus.component";
-import DeleteButton from "./components/DeleteButton.component";
+import DateFormat from '../components/DateFormat.component'
+import RequestStatus from './components/RequestStatus.component'
+import DeleteButton from './components/DeleteButton.component'
 import RequestFilters from "./components/RequestFilters.component";
 import getUserProfile from "@/supabase/getUserProfile";
 
@@ -159,12 +159,10 @@ const DashboardRequestsPage = async ({ searchParams }) => {
                   </Link>
                 </TableCell>
                 <TableCell>
-                  {new Date(request.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
+                  <DateFormat date={request.created_at} />
                 </TableCell>
                 <TableCell>
-                  {request.resolved_at
-                    ? new Date(request.resolved_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })
-                    : "None"}
+                  <DateFormat date={request.resolved_at} />
                 </TableCell>
                 <TableCell>
                   <Link href={`/dashboard/users/${request.from.id}`}>
