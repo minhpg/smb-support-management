@@ -86,8 +86,6 @@ const GroupForm = ({ group }) => {
 
     }
 
-    
-
     // console.log(groupMembers);
     // if (groupMembers) {
     //   if (groupMembers.length > 0) {

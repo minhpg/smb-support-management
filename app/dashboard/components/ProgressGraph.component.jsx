@@ -64,7 +64,6 @@ const ProgressGraph = () => {
 
       const aggregatedDataset = [];
       for (const [key, value] of Object.entries(aggregatedComplete)) {
-        console.log(value)
         const completedCount = value.filter((item) => item.completed).length;
         const rejectedCount = value.filter((item) => item.rejected).length;
         const pendingCount = value.filter(

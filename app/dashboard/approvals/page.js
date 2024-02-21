@@ -47,7 +47,6 @@ const ApprovalsBody = async ({ searchParams }) => {
       .eq("user", user.id);
 
     const groupIds = groups.map(({ group }) => group);
-    console.log(groupIds);
 
     query = query.in("group", groupIds);
   }
@@ -81,8 +80,8 @@ const ApprovalsBody = async ({ searchParams }) => {
     query.eq("group", searchParams.group);
   }
 
-  const { data: approvals, error } = await query;
-  console.log(approvals, error);
+  const { data: approvals } = await query;
+
   return (
     <Card className="mt-6">
       <Table>

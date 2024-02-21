@@ -1,4 +1,3 @@
-import getSession from "@/supabase/getSession";
 import {
   Button,
   Card,
