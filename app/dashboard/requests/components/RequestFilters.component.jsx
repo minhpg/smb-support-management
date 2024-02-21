@@ -17,22 +17,30 @@ import {
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import useUsers from '@/hooks/useUsers.hook'
+import useUsers from "@/hooks/useUsers.hook";
 
 const RequestFilters = ({ searchParams }) => {
   const supabase = createClientComponentClient();
   const { groups } = useGroups(supabase);
-  const { users } = useUsers(supabase)
+  const { users } = useUsers(supabase);
   const campuses = useCampuses(supabase);
 
   const router = useRouter();
 
-  const { from, to } = searchParams.date_range ? JSON.parse(searchParams.date_range) : { from: null, to: null}
+  let defaultRangeState = {
+    from: null,
+    to: null,
+  };
 
-  const [dateRange, setDateRange] = useState({
-    from: new Date(from),
-    to: new Date(to)
-  });
+  if (searchParams.date_range) {
+    const { from, to } = JSON.parse(searchParams.date_range);
+    defaultRangeState = {
+      from: new Date(from),
+      to: new Date(to),
+    };
+  }
+
+  const [dateRange, setDateRange] = useState(defaultRangeState);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -74,10 +82,14 @@ const RequestFilters = ({ searchParams }) => {
           </Col>
           <Col numColSpan={3} numColSpanLg={1}>
             <Text>Created by</Text>
-            <SearchSelect name="created_by" defaultValue={searchParams.created_by}>
+            <SearchSelect
+              name="created_by"
+              defaultValue={searchParams.created_by}
+            >
               {users.map((user) => (
                 <SearchSelectItem key={user.id} value={user.id}>
-                  { user.first_name } { user.last_name } - {user.campus ? user.campus.name : "No campus assigned"}
+                  {user.first_name} {user.last_name} -{" "}
+                  {user.campus ? user.campus.name : "No campus assigned"}
                 </SearchSelectItem>
               ))}
             </SearchSelect>
@@ -87,7 +99,9 @@ const RequestFilters = ({ searchParams }) => {
             <SearchSelect name="group" defaultValue={searchParams.group}>
               {groups.map((group) => (
                 <SearchSelectItem key={group.id} value={group.id}>
-                  {`${group.name}${group.campus ? ` - ${group.campus.name}` : ""}`}
+                  {`${group.name}${
+                    group.campus ? ` - ${group.campus.name}` : ""
+                  }`}
                 </SearchSelectItem>
               ))}
             </SearchSelect>
