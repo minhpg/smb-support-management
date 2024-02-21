@@ -14,6 +14,11 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
+  if (user && req.nextUrl.pathname == "/") {
+    return NextResponse.redirect(new URL("/dashboard/requests", req.url));
+  }
+
+
   // if (user) {
   //   const { data: userProfile } = await supabase
   //     .from("users")

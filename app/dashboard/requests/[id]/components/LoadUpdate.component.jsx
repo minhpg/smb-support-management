@@ -37,7 +37,7 @@ const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
               <Flex>
                 <div>
                   {update.update_type.title} -{" "}
-                  {new Date(update.created_at).toLocaleString("vi-vn")}
+                  {new Date(update.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
                 </div>
                 {update.update_type.requires_deadline && (
                   <>
@@ -66,7 +66,7 @@ const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
                 <div className="mt-3">
                   <Text>Expected fulfill date</Text>
                   <Text className="text-black">
-                    {new Date(update.deadline).toLocaleDateString()}
+                    {new Date(update.deadline).toLocaleDateString("vi-vn")}
                   </Text>
                 </div>
               )}

@@ -76,7 +76,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
           <Col numColSpan={2}>
             <Text>Created at</Text>
             <Text className="py-2 text-black">
-              {new Date(request.created_at).toLocaleString("vi-vn")} (
+              {new Date(request.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })} (
               {timeSince(new Date(request.created_at))} ago)
             </Text>
           </Col>

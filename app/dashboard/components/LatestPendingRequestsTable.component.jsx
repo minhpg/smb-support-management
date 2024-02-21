@@ -53,7 +53,7 @@ const LatestPendingRequestsTable = async () => {
                 </Link>
               </TableCell>
               <TableCell>
-                {new Date(request.created_at).toLocaleString("vi-vn")}
+                {new Date(request.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
               </TableCell>
               <TableCell>
                 <Link href={`/dashboard/users/${request.from.id}`}>

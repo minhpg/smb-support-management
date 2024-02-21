@@ -53,11 +53,11 @@ const LateUpdatesTable = async () => {
                 </Link>
               </TableCell>
               <TableCell>
-                {new Date(update.created_at).toLocaleString("vi-vn")}
+                {new Date(update.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
               </TableCell>
               <TableCell>
                 {update.deadline
-                  ? new Date(update.deadline).toLocaleString("vi-vn")
+                  ? new Date(update.deadline).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })
                   : "None"}
               </TableCell>
               <TableCell>

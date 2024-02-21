@@ -101,7 +101,6 @@ const DashboardRequestsPage = async ({ searchParams }) => {
     query.eq("priority", searchParams.priority);
   }
 
-
   if (searchParams.created_by) {
     query.eq("from", searchParams.created_by);
   }
@@ -113,16 +112,16 @@ const DashboardRequestsPage = async ({ searchParams }) => {
 
   if (searchParams.group) {
     const { data: respondGroups } = await supabase
-    .from("respond_group_members")
-    .select("respond_group")
-    .eq('group', searchParams.group)
+      .from("respond_group_members")
+      .select("respond_group")
+      .eq("group", searchParams.group);
 
-    if(respondGroups.length > 0){
+    if (respondGroups.length > 0) {
       query = query.or(
         respondGroups
           .map(({ respond_group }) => `to.eq.${respond_group}`)
           .join(",")
-        );
+      );
     }
   }
 
@@ -160,11 +159,11 @@ const DashboardRequestsPage = async ({ searchParams }) => {
                   </Link>
                 </TableCell>
                 <TableCell>
-                  {new Date(request.created_at).toLocaleString("vi-vn")}
+                  {new Date(request.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
                 </TableCell>
                 <TableCell>
                   {request.resolved_at
-                    ? new Date(request.resolved_at).toLocaleString("vi-vn")
+                    ? new Date(request.resolved_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })
                     : "None"}
                 </TableCell>
                 <TableCell>
@@ -203,12 +202,13 @@ const DashboardRequestsPage = async ({ searchParams }) => {
       </Card>
       <Flex className="p-5 w-full" justifyContent="between">
         <div className="w-full">
-        <Text>
-          Page <b>{pageIndex}</b>
-        </Text>
-        <Text>
-        <b>{((pageIndex-1)*pageSize)+requests.length}</b> out of <b>{count}</b> records
-        </Text>
+          <Text>
+            Page <b>{pageIndex}</b>
+          </Text>
+          <Text>
+            <b>{(pageIndex - 1) * pageSize + requests.length}</b> out of{" "}
+            <b>{count}</b> records
+          </Text>
         </div>
         <Flex className="gap-3" justifyContent="end">
           <Link

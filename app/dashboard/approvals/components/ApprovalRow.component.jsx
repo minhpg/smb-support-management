@@ -20,7 +20,6 @@ import LoadMedia from "@/app/dashboard/requests/[id]/components/LoadMedia.compon
 
 import { timeSince } from "@/utils";
 
-
 const ApprovalRow = ({ approval }) => {
   const [showDetails, setShowDetails] = useState(false);
   const router = useRouter();
@@ -54,13 +53,15 @@ const ApprovalRow = ({ approval }) => {
     <>
       <TableRow>
         <TableCell>{update.update_type.title}</TableCell>
-        <TableCell>{new Date(update.created_at).toLocaleString("vi-vn")}</TableCell>
         <TableCell>
-        <Link href={`/dashboard/requests/${approval.update.request.id}`}>
-                  <Button variant="light" className="py-2">
-                   {approval.update.request.title}
-                  </Button>
-                </Link>
+          {new Date(update.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })}
+        </TableCell>
+        <TableCell>
+          <Link href={`/dashboard/requests/${approval.update.request.id}`}>
+            <Button variant="light" className="py-2">
+              {approval.update.request.title}
+            </Button>
+          </Link>
         </TableCell>
         <TableCell>
           {approval.group.name}{" "}
@@ -121,7 +122,7 @@ const ApprovalRow = ({ approval }) => {
               <Col numColSpan={2}>
                 <Text>Created at</Text>
                 <Text className="py-2 text-black">
-                  {new Date(request.created_at).toLocaleString("vi-vn")} (
+                  {new Date(request.created_at).toLocaleString("vi-VN", { timezone: "Asia/Ho_Chi_Minh" })} (
                   {timeSince(new Date(request.created_at))} ago)
                 </Text>
               </Col>
@@ -153,7 +154,7 @@ const ApprovalRow = ({ approval }) => {
                 <Col numColSpan={6}>
                   <Text>Expected fulfill date</Text>
                   <Text className="text-black py-2">
-                    {new Date(update.deadline).toLocaleDateString()}
+                    {new Date(update.deadline).toLocaleDateString("vi-vn")}
                   </Text>
                 </Col>
               )}
