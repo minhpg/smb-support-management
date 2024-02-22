@@ -67,7 +67,7 @@ export async function middleware(req) {
         "/dashboard/groups",
       ];
 
-      let allowed = ["/dashboard/verified"];
+      let allowed = ["/dashboard/verified", "/dashboard/unauthorized"];
 
       if (permissionLevel) {
         if (permissionLevel == "ADMIN") allowed = adminAllowed;

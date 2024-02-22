@@ -66,7 +66,7 @@ const UserForm = ({ user }) => {
   return (
     <>
       <Card>
-        <Flex>
+        <Flex justifyContent="between">
           <Flex className="gap-3" justifyContent="start">
             {/* <Title>User {user.id}</Title> */}
             {user.verified ? (
