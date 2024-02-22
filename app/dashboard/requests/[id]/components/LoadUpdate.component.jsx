@@ -74,7 +74,7 @@ const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
               {update.update_type.attach_text && (
                 <div className="mt-3">
                   <Text>Notes</Text>
-                  <Text className="text-black">{update.text}</Text>
+                  <Text className="text-black whitespace-pre-wrap">{update.text}</Text>
                 </div>
               )}
               {update.update_type.requires_approval && (

@@ -110,7 +110,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
           </Col>
           <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
             <Text>Description</Text>
-            <Text className="py-2 text-black">{request.description}</Text>
+            <Text className="py-2 text-black whitespace-pre-wrap">{request.description}</Text>
           </Col>
           {request.media && <LoadMedia mediaId={request.media} />}
           <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
