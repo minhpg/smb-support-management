@@ -3,11 +3,13 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button, Col, Flex, Grid, Text } from "@tremor/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const LoadMedia = ({ mediaId }) => {
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
+  const [docs, setDocs] = useState([]);
 
   const supabase = createClientComponentClient();
 
@@ -17,16 +19,36 @@ const LoadMedia = ({ mediaId }) => {
       .select("*")
       .eq("media", mediaId);
 
-    if(mediaFiles){
+    console.log(mediaFiles);
+
+    if (mediaFiles) {
       const loadedImages = await Promise.all(
-        mediaFiles.map(async (mediaFile) => {
-          const { data } = await supabase.storage
-            .from("media")
-            .createSignedUrl(mediaFile.path, 36000);
-          return data.signedUrl;
-        }),
+        mediaFiles
+          .filter((file) => file.type.includes("image"))
+          .map(async (mediaFile) => {
+            const { data } = await supabase.storage
+              .from("media")
+              .createSignedUrl(mediaFile.path, 36000);
+            return data.signedUrl;
+          })
+      );
+
+      const loadedDocuments = await Promise.all(
+        mediaFiles
+          .filter((file) => !file.type.includes("image"))
+          .map(async (mediaFile) => {
+            const { data, error } = await supabase.storage
+              .from("media")
+              .createSignedUrl(mediaFile.path, 36000);
+            console.log(data, error);
+            return {
+              url: data.signedUrl,
+              name: mediaFile.name,
+            };
+          })
       );
       setImages(loadedImages);
+      setDocs(loadedDocuments);
     }
     setLoading(false);
   };
@@ -40,10 +62,10 @@ const LoadMedia = ({ mediaId }) => {
     <Col numColSpan={6}>
       {loading && (
         <Button onClick={loadMediaAsync} variant="light">
-          Show images
+          Show attachments
         </Button>
       )}
-      {(!loading && images.length > 0 ) && (
+      {!loading && images.length > 0 && (
         <Grid className="gap-3" numItems={2} numItemsMd={3} numItemsLg={4}>
           {/* {images.length == 0 && <Text>Loading...</Text>} */}
           {images.map((url, index) => (
@@ -53,11 +75,23 @@ const LoadMedia = ({ mediaId }) => {
               </Flex>
             </Col>
           ))}
+          {docs.map((doc) => {
+            return (
+              <Col
+                numColSpan={2}
+                numColSpanMd={4}
+                numColSpanLg={6}
+                key={doc.name}
+              >
+                <Link href={doc.url} target="_blank">
+                  <Button variant="light">{doc.name}</Button>
+                </Link>
+              </Col>
+            );
+          })}
         </Grid>
       )}
-      {
-        (!loading && images.length == 0 ) && <div>No images!</div>
-      }
+      {!loading && images.length == 0 && <div>No attachments!</div>}
     </Col>
   );
 };

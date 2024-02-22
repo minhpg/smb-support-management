@@ -4,6 +4,7 @@ import { getCurrentTimestampTZ } from "@/utils";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button, Flex } from "@tremor/react";
 import { useRouter } from "next/navigation";
+import EditUpdate from './EditUpdate'
 
 const UpdateActions = ({ update, requestLocked }) => {
   const router = useRouter();
@@ -28,7 +29,9 @@ const UpdateActions = ({ update, requestLocked }) => {
 
   if (requestLocked) return <></>;
   return (
-    <Flex className="mt-3 gap-3" justifyContent="end">
+    <Flex className="mt-3 gap-3" justifyContent="space-between">
+      {/* <EditUpdate update={update} /> */}
+      <Flex justifyContent="end" className="w-full">
       {update.update_type.requires_deadline && !update.fulfilled && (
         <Button color="blue" onClick={markFulfilled}>
           Mark as fulfilled
@@ -37,6 +40,7 @@ const UpdateActions = ({ update, requestLocked }) => {
       <Button color="red" onClick={handleDeleteUpdate}>
         Delete
       </Button>
+      </Flex>
     </Flex>
   );
 };

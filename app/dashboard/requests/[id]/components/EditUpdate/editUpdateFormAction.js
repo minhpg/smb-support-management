@@ -121,21 +121,16 @@ const uploadImages = async (supabase, files) => {
 
   // Upload and register media files
   for (const file of files) {
-    const { name, type, size } = file;
     /** Random uuid path */
     const path = `public/${v4()}`;
 
     // Upload to bucket
-    const response = await supabase.storage.from("media").upload(path, file);
-    console.log(response)
+    await supabase.storage.from("media").upload(path, file);
 
     // Register media items
     await supabase.from("media_items").insert({
       media: mediaGroupId,
       path,
-      name,
-      type,
-      size,
     });
   }
 

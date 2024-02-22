@@ -13,7 +13,7 @@ const usePreviews = () => {
     const objectUrls = [];
 
     for (const selectedFile of selectedFiles) {
-      objectUrls.push(URL.createObjectURL(selectedFile));
+      if(selectedFile.type.includes("image")) objectUrls.push(URL.createObjectURL(selectedFile));
     }
     setPreviews(objectUrls);
 

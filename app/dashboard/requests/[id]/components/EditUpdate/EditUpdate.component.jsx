@@ -24,11 +24,10 @@ import {
 import { useEffect, useState } from "react";
 import useUpdateTypes from "@/hooks/useUpdateTypes.hook";
 import usePreviews from "@/hooks/usePreviews.hook";
-import createUpdateFormAction from "./createUpdateFormAction";
-import { useRouter } from "next/navigation";
+import editUpdateFormAction from "./editUpdateFormAction";
 import { useFormStatus } from 'react-dom'
 
-const useCreateUpdate = (supabase, requestId) => {
+const useEditUpdate = (supabase) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [updateType, setUpdateType] = useState(null);
@@ -87,7 +86,7 @@ const useCreateUpdate = (supabase, requestId) => {
     formData.append("equipment_request", attachRequestItems);
 
     // reset form
-    await createUpdateFormAction(formData);
+    await editUpdateFormAction(formData);
     setSelectedType(null);
     setUpdateType(null);
     setApproveGroups([]);
@@ -122,9 +121,9 @@ const useCreateUpdate = (supabase, requestId) => {
   };
 };
 
-const CreateUpdate = ({ requestId, campusId }) => {
+const EditUpdate = ({ update }) => {
   const supabase = createClientComponentClient();
-  const types = useUpdateTypes(supabase, campusId);
+  const types = useUpdateTypes(supabase);
 
   const {
     updateType,
@@ -144,9 +143,16 @@ const CreateUpdate = ({ requestId, campusId }) => {
     isOpen,
     setIsOpen,
     pending
-  } = useCreateUpdate(supabase, requestId);
+  } = useEditUpdate(supabase);
 
   const { previews, onSelectFile, selectedFiles } = usePreviews();
+
+  console.log(update)
+
+  useEffect(() => {
+    setSelectedType(update.update_type.id)
+    setText(update.text)
+  }, [])
 
   useEffect(() => {
     setMediaFiles(selectedFiles);
@@ -155,7 +161,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
   return (
     <>
       <Button variant="light" onClick={() => setIsOpen(true)}>
-        Create update
+        Edit update
       </Button>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -163,7 +169,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
           <Dialog.Panel className="mx-auto w-full w-3/4 md:w-5/6">
             <Card>
               <Flex>
-                <Title>Create new update</Title>
+                <Title>Edit update</Title>
                 <Button
                   color="red"
                   variant="light"
@@ -236,6 +242,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
                               name="image[]"
                               multiple
                               onChange={onSelectFile}
+                              accept="image/*"
                             />
                           </Text>
                         </Col>
@@ -254,7 +261,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
                                     justifyContent="center"
                                     className="h-full"
                                   >
-                                    <img
+                                    <image
                                       alt="preview"
                                       src={preview}
                                       className="w-full rounded-xl"
@@ -265,17 +272,6 @@ const CreateUpdate = ({ requestId, campusId }) => {
                             </Grid>
                           </Col>
                         )}
-                                  {
-            Array.from(selectedFiles)
-              .filter((selectedFile) => !selectedFile.type.includes("image"))
-              .map((selectedFile) => {
-                return (
-                  <Col numColSpan={2} key={selectedFile.name}>
-                    <Button variant="light">{selectedFile.name}</Button>
-                  </Col>
-                );
-              })
-          }
                       </>
                     )}
                     {updateType.attach_request_items && (
@@ -455,4 +451,4 @@ const SelectRequestItemList = ({ requestId, setAttachRequestItems }) => {
   );
 };
 
-export default CreateUpdate;
+export default EditUpdate;

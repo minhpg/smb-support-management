@@ -46,18 +46,19 @@ const CreateRequestForm = () => {
 };
 
 const CreateRequestFormInternal = () => {
-
   const supabase = createClientComponentClient();
-  
+
   const { pending } = useFormStatus();
 
   const campuses = useCampuses(supabase);
 
   const { groups } = useGroups(supabase);
 
-  const { previews, onSelectFile } = usePreviews();
+  const { previews, selectedFiles, onSelectFile } = usePreviews();
 
   const [selectedCampus, setSelectedCampus] = useState("");
+
+  console.log(selectedFiles)
 
   return (
     <>
@@ -178,7 +179,6 @@ const CreateRequestFormInternal = () => {
                 name="image[]"
                 multiple
                 onChange={onSelectFile}
-                accept="image/*"
               />
             </Text>
           </Col>
@@ -204,6 +204,17 @@ const CreateRequestFormInternal = () => {
               </Grid>
             </Col>
           )}
+          {
+            Array.from(selectedFiles)
+              .filter((selectedFile) => !selectedFile.type.includes("image"))
+              .map((selectedFile) => {
+                return (
+                  <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6} key={selectedFile.name}>
+                    <Button variant="light">{selectedFile.name}</Button>
+                  </Col>
+                );
+              })
+          }
         </Grid>
       </Card>
     </>
