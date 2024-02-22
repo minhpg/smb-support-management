@@ -75,7 +75,7 @@ const UserForm = ({ user }) => {
               <Badge color="red">User Not verified</Badge>
             )}
           </Flex>
-          <Text className="w-full">{saved ? "Saved" : "Not saved"}</Text>
+          <Text>{saved ? "Saved" : "Not saved"}</Text>
         </Flex>
         <form
           onSubmit={onSubmit}

@@ -66,10 +66,9 @@ const RequestsTable = async ({ searchParams }) => {
       .select("respond_group")
       .or(groups.map(({ group }) => `group.eq.${group}`).join(","));
 
-    query = query.or(
-      respondGroups
-        .map(({ respond_group }) => `to.eq.${respond_group}`)
-        .join(",")
+    query = query.in(
+      "respond_group",
+      respondGroups.map(({ respond_group }) => respond_group)
     );
   }
 
