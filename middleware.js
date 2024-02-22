@@ -45,9 +45,12 @@ export async function middleware(req) {
         ? userProfile.role.permission_level
         : null;
 
-      const userAllowed = ["/dashboard/requests", "/dashboard/account"];
+      const userAllowed = [
+        "/dashboard/requests",
+        "/dashboard/account",
+      ];
       const moderatorAllowed = [
-        "/dashboard",
+        "/dashboard/verified",
         "/dashboard/requests",
         "/dashboard/approvals",
         "/dashboard/account",
@@ -64,7 +67,7 @@ export async function middleware(req) {
         "/dashboard/groups",
       ];
 
-      let allowed = [];
+      let allowed = ["/dashboard/verified"];
 
       if (permissionLevel) {
         if (permissionLevel == "ADMIN") allowed = adminAllowed;
