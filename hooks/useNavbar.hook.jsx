@@ -31,7 +31,7 @@ const useNavbar = (supabase) => {
       return;
     }
 
-    if (user.role) {
+    if (user.role && user.verified) {
       if (user.role.permission_level == "USER") {
         setNavbarItems([
           {

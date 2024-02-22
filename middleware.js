@@ -18,7 +18,6 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/dashboard/requests", req.url));
   }
 
-
   if (user) {
     const { data: userProfile } = await supabase
       .from("users")
@@ -55,6 +54,8 @@ export async function middleware(req) {
       ];
       const adminAllowed = [
         "/dashboard",
+        "/dashboard/campuses",
+        "/dashboard/groups",
         "/dashboard/requests",
         "/dashboard/approvals",
         "/dashboard/update-types",
@@ -79,10 +80,11 @@ export async function middleware(req) {
         }
       }
 
-      if (!allowedFlag)
+      if (!allowedFlag) {
         return NextResponse.redirect(
           new URL("/dashboard/unauthorized", req.url)
         );
+      }
     }
   }
 

@@ -11,7 +11,7 @@ const DashboardAwaitVerificationPage = async () => {
           <div className="flex justify-center">
             <div>
               <Title>Your account has been approved</Title>
-              <Link href="/dashboard">
+              <Link href="/dashboard/requests">
                 <Button variant="light">
                   <Flex>
                     Visit dashboard{" "}
