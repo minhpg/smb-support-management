@@ -17,12 +17,12 @@ import {
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import useUsers from "@/hooks/useUsers.hook";
+// import useUsers from "@/hooks/useUsers.hook";
 
 const RequestFilters = ({ searchParams }) => {
   const supabase = createClientComponentClient();
   const { groups } = useGroups(supabase);
-  const { users } = useUsers(supabase);
+  // const { users } = useUsers(supabase);
   const campuses = useCampuses(supabase);
 
   const router = useRouter();
@@ -39,6 +39,7 @@ const RequestFilters = ({ searchParams }) => {
       to: to ? new Date(to) : null,
     };
   }
+
 
   const [dateRange, setDateRange] = useState(defaultRangeState);
 
@@ -64,7 +65,7 @@ const RequestFilters = ({ searchParams }) => {
               ))}
             </Select>
           </Col>
-          <Col numColSpan={3} numColSpanLg={1}>
+          {/* <Col numColSpan={3} numColSpanLg={1}>
             <Text>Created by</Text>
             <SearchSelect
               name="created_by"
@@ -77,7 +78,7 @@ const RequestFilters = ({ searchParams }) => {
                 </SearchSelectItem>
               ))}
             </SearchSelect>
-          </Col>
+          </Col> */}
           <Col numColSpan={3} numColSpanLg={1}>
             <Text>Group</Text>
             <SearchSelect name="group" defaultValue={searchParams.group}>
@@ -90,7 +91,7 @@ const RequestFilters = ({ searchParams }) => {
               ))}
             </SearchSelect>
           </Col>
-          <Col numColSpan={3} numColSpanLg={2}>
+          <Col numColSpan={3} numColSpanLg={1}>
             <Text>Date range</Text>
             <DateRangePicker
               name="date-range"

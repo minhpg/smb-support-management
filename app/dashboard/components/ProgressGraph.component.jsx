@@ -40,7 +40,8 @@ const ProgressGraph = ({ searchParams }) => {
           .from("respond_group_members")
           .select("respond_group")
           .eq("group", searchParams.group);
-        respondGroups = respondGroupData.data;
+
+        const respondGroups = respondGroupData.data;
 
         if (respondGroups.length > 0) {
           query = query.or(
