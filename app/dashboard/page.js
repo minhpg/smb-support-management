@@ -8,47 +8,126 @@ import RequestsCountChart from "./components/RequestsCountChart.component";
 import getSession from "@/supabase/getSession";
 import { Suspense } from "react";
 import { LoadingCard } from "./loading";
+import RequestFilters from "./components/RequestFilters.component";
 
-const DashboardPage = async () => {
+const DashboardPage = async ({ searchParams }) => {
   const { supabase } = await getSession();
+  
   return (
     <>
       <Flex>
         <Title>Dashboard</Title>
       </Flex>
+      <RequestFilters searchParams={searchParams} />
       <Suspense fallback={<LoadingCard />}>
-        <StatisticsBody supabase={supabase} />
+        <StatisticsBody supabase={supabase} searchParams={searchParams} />
       </Suspense>
       <Suspense fallback={<LoadingCard />}>
-        <LatestPendingRequestsTable supabase={supabase} />
+        <LatestPendingRequestsTable supabase={supabase} searchParams={searchParams}/>
       </Suspense>
       <Suspense fallback={<LoadingCard />}>
-        <LateUpdatesTable supabase={supabase} />
+        <LateUpdatesTable supabase={supabase} searchParams={searchParams}/>
       </Suspense>
     </>
   );
 };
 
-const StatisticsBody = async ({ supabase }) => {
-  const { count: totalRequestCount } = await supabase
-    .from("requests")
-    .select("*", { count: "exact", head: true });
+const StatisticsBody = async ({ supabase, searchParams }) => {
 
-  const { count: totalPendingCount } = await supabase
+  let respondGroups = []
+
+  if(searchParams.group){
+    let respondGroupData = await supabase
+    .from("respond_group_members")
+    .select("respond_group")
+    .eq("group", searchParams.group);
+    respondGroups = respondGroupData.data
+  }
+
+  const buildQuery = (params) => {
+    
+    let query = supabase
     .from("requests")
     .select("*", { count: "exact", head: true })
-    .eq("completed", false)
-    .eq("rejected", false);
+  
+    if (searchParams.campus) {
+      query.eq("campus", searchParams.campus);
+    }
+    
+    if (searchParams.group) {
+      if (respondGroups.length > 0) {
+        query = query.or(
+          `to.in.(${respondGroups
+            .map(({ respond_group }) => respond_group)
+            .join(",")})`
+        );
+      }
+    }
+  
+    if (searchParams.date_range) {
+      const { from, to } = JSON.parse(searchParams.date_range);
+  
+      if (from) {
+        let fromDate = new Date(from);
+        fromDate.setDate(fromDate.getDate() - 1);
+        query.gte("created_at", fromDate.toISOString());
+      }
+  
+      if (to) {
+        let toDate = new Date(to);
+        toDate.setDate(toDate.getDate() + 1);
+        query.lte("created_at", toDate.toISOString());
+      }
+    }
+  
+    if (searchParams.status) {
+      if (searchParams.status == "pending") {
+        query.eq("completed", false).eq("rejected", false);
+      }
+      if (searchParams.status == "completed") {
+        query.eq("completed", true).eq("rejected", false);
+      }
+      if (searchParams.status == "rejected") {
+        query.eq("completed", false).eq("rejected", true);
+      }
+    }
+  
+    if (searchParams.priority) {
+      query.eq("priority", searchParams.priority);
+    }
+  
+    if (searchParams.created_by) {
+      query.eq("from", searchParams.created_by);
+    }
+  
+    if(params) {
+      const {
+        completed,
+        rejected
+      } = params
+      query.eq("completed", completed)
+      query.eq("rejected", rejected);  
+    }
 
-  const { count: totalRejectedCount } = await supabase
-    .from("requests")
-    .select("*", { count: "exact", head: true })
-    .eq("rejected", true);
+    return query
+  }
 
-  const { count: totalCompletedCount } = await supabase
-    .from("requests")
-    .select("*", { count: "exact", head: true })
-    .eq("completed", true);
+  const { count: totalRequestCount } = await buildQuery()
+
+  const { count: totalPendingCount } = await buildQuery({
+    completed: false,
+    rejected: false
+  })
+
+  const { count: totalRejectedCount } = await buildQuery({
+    completed: false,
+    rejected: true
+  })
+
+  const { count: totalCompletedCount } = await await buildQuery({
+    completed: true,
+    rejected: false
+  })
 
   const colors = ["blue", "red", "green"];
 
@@ -81,7 +160,7 @@ const StatisticsBody = async ({ supabase }) => {
       <RequestCountCards {...cardsData} />
       <Grid className="gap-3 mt-6" numItems={1} numItemsLg={2}>
         <Col>
-          <ProgressGraph />
+          <ProgressGraph searchParams={searchParams} />
         </Col>
         <Col>
           <RequestsCountChart

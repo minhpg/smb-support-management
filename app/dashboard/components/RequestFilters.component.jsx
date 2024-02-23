@@ -47,7 +47,7 @@ const RequestFilters = ({ searchParams }) => {
     const formData = new FormData(event.target);
     formData.set("date_range", JSON.stringify(dateRange));
     const queryString = new URLSearchParams(formData).toString();
-    router.replace("/dashboard/requests?" + queryString);
+    router.replace("/dashboard?" + queryString);
   };
 
   return (
@@ -62,22 +62,6 @@ const RequestFilters = ({ searchParams }) => {
                   {campus.name}
                 </SelectItem>
               ))}
-            </Select>
-          </Col>
-          <Col numColSpan={3} numColSpanLg={1}>
-            <Text>Status</Text>
-            <Select name="status" defaultValue={searchParams.status}>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-            </Select>
-          </Col>
-          <Col numColSpan={3} numColSpanLg={1}>
-            <Text>Priority</Text>
-            <Select name="priority" defaultValue={searchParams.priority}>
-              <SelectItem value="1">Low</SelectItem>
-              <SelectItem value="2">Medium</SelectItem>
-              <SelectItem value="3">High</SelectItem>
             </Select>
           </Col>
           <Col numColSpan={3} numColSpanLg={1}>
@@ -106,7 +90,7 @@ const RequestFilters = ({ searchParams }) => {
               ))}
             </SearchSelect>
           </Col>
-          <Col numColSpan={3} numColSpanLg={1}>
+          <Col numColSpan={3} numColSpanLg={2}>
             <Text>Date range</Text>
             <DateRangePicker
               name="date-range"
@@ -114,21 +98,6 @@ const RequestFilters = ({ searchParams }) => {
               onValueChange={setDateRange}
               className="min-w-full"
             />
-          </Col>
-          <Col numColSpan={3} numColSpanLg={1}>
-            <Text>Order</Text>
-            <Select name="order" defaultValue={searchParams.order}>
-              <SelectItem value="asc">Ascending</SelectItem>
-              <SelectItem value="desc">Descending</SelectItem>
-            </Select>
-          </Col>
-          <Col numColSpan={3} numColSpanLg={2}>
-            <Text>Order by</Text>
-            <Select name="order_by" defaultValue={searchParams.order_by}>
-              <SelectItem value="priority">Priority</SelectItem>
-              <SelectItem value="created_at">Created at</SelectItem>
-              <SelectItem value="resolved_at">Resolved at</SelectItem>
-            </Select>
           </Col>
           <Col numColSpan={3} numColSpanLg={3}>
             <Flex justifyContent="end">

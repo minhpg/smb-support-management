@@ -5,7 +5,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AreaChart, Card, Title } from "@tremor/react";
 import { useEffect, useState } from "react";
 
-const ProgressGraph = () => {
+const ProgressGraph = ({ searchParams }) => {
   const supabase = createClientComponentClient();
   const [data, setData] = useState(null);
   const [aggreatedData, setAggregatedData] = useState([]);
@@ -21,7 +21,8 @@ const ProgressGraph = () => {
         .toISOString()
         .replace("T", " ")
         .replace("Z", "");
-      const { data: requestsData } = await supabase
+
+      let query = supabase
         .from("requests")
         .select("completed, rejected, created_at, resolved_at")
         .lte("created_at", currentTime)
@@ -30,9 +31,66 @@ const ProgressGraph = () => {
           ascending: true,
         });
 
+      if (searchParams.campus) {
+        query.eq("campus", searchParams.campus);
+      }
+
+      if (searchParams.group) {
+        let respondGroupData = await supabase
+          .from("respond_group_members")
+          .select("respond_group")
+          .eq("group", searchParams.group);
+        respondGroups = respondGroupData.data;
+
+        if (respondGroups.length > 0) {
+          query = query.or(
+            `to.in.(${respondGroups
+              .map(({ respond_group }) => respond_group)
+              .join(",")})`
+          );
+        }
+      }
+
+      if (searchParams.date_range) {
+        const { from, to } = JSON.parse(searchParams.date_range);
+
+        if (from) {
+          let fromDate = new Date(from);
+          fromDate.setDate(fromDate.getDate() - 1);
+          query.gte("created_at", fromDate.toISOString());
+        }
+
+        if (to) {
+          let toDate = new Date(to);
+          toDate.setDate(toDate.getDate() + 1);
+          query.lte("created_at", toDate.toISOString());
+        }
+      }
+
+      if (searchParams.status) {
+        if (searchParams.status == "pending") {
+          query.eq("completed", false).eq("rejected", false);
+        }
+        if (searchParams.status == "completed") {
+          query.eq("completed", true).eq("rejected", false);
+        }
+        if (searchParams.status == "rejected") {
+          query.eq("completed", false).eq("rejected", true);
+        }
+      }
+
+      if (searchParams.priority) {
+        query.eq("priority", searchParams.priority);
+      }
+
+      if (searchParams.created_by) {
+        query.eq("from", searchParams.created_by);
+      }
+      const { data: requestsData } = await query;
+
       let aggregatedDate = requestsData.map((request) => {
         const dateString = request.resolved_at || request.created_at;
-        const dateObj = new Date(dateString)
+        const dateObj = new Date(dateString);
         const date = dateObj.toDateString();
         return {
           ...request,
@@ -77,7 +135,7 @@ const ProgressGraph = () => {
           Pending: pendingCount,
         });
       }
-      const sortedDataset = aggregatedDataset.sort((a, b) => a.ts - b.ts)
+      const sortedDataset = aggregatedDataset.sort((a, b) => a.ts - b.ts);
       setAggregatedData(sortedDataset);
     }
   }, [data]);

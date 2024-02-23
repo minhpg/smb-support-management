@@ -61,16 +61,35 @@ const RequestsTable = async ({ searchParams }) => {
       .select("group")
       .eq("user", user.id);
 
-    const { data: respondGroups } = await supabase
+    let respondGroupQuery = supabase
       .from("respond_group_members")
       .select("respond_group")
       .or(groups.map(({ group }) => `group.eq.${group}`).join(","));
+    if (searchParams.group) respondGroupQuery.eq("group", searchParams.group);
+    const { data: respondGroups } = await respondGroupQuery;
 
     query = query.or(
       `to.in.(${respondGroups
         .map(({ respond_group }) => respond_group)
         .join(",")}), from.eq.${escape(user.id)}`
     );
+  }
+
+  if (permissionLevel == "ADMIN") {
+    if (searchParams.group) {
+      const { data: respondGroups } = await supabase
+        .from("respond_group_members")
+        .select("respond_group")
+        .eq("group", searchParams.group);
+
+      if (respondGroups.length > 0) {
+        query = query.or(
+          `to.in.(${respondGroups
+            .map(({ respond_group }) => respond_group)
+            .join(",")})`
+        );
+      }
+    }
   }
 
   if (searchParams.order && searchParams.order_by) {
@@ -126,25 +145,14 @@ const RequestsTable = async ({ searchParams }) => {
     query.eq("from", searchParams.created_by);
   }
 
+  if (searchParams.campus) {
+    query.eq("campus", searchParams.campus);
+  }
+
   const pageSize = 10;
   const pageIndex = searchParams.page || 1;
 
   query.range((pageIndex - 1) * pageSize, pageIndex * pageSize - 1);
-
-  if (searchParams.group) {
-    const { data: respondGroups } = await supabase
-      .from("respond_group_members")
-      .select("respond_group")
-      .eq("group", searchParams.group);
-
-    if (respondGroups.length > 0) {
-      query = query.or(
-        `to.in.(${respondGroups
-          .map(({ respond_group }) => respond_group)
-          .join(",")}`
-      );
-    }
-  }
 
   const { data: requests, count, error } = await query;
 
