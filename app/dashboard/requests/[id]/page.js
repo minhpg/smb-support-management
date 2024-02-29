@@ -38,7 +38,38 @@ const DashboardUpdateRequestPage = async ({ params }) => {
   if (user.role.permission_level == "USER") allowCreateUpdate = false;
 
   if (!request) {
-    redirect('/dashboard/requests')
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="flex justify-center">
+            <div>
+              <Title>Request not found!</Title>
+              <Link href="/dashboard/requests">
+                <Button variant="light">
+                  <Flex>
+                    Visit dashboard{" "}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                      />
+                    </svg>
+                  </Flex>
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const { data: respondGroupMembers } = await supabase
@@ -56,12 +87,8 @@ const DashboardUpdateRequestPage = async ({ params }) => {
           </Flex>
           <DeleteButton requestId={request.id} />
         </Flex>
-        <Grid
-          numItems={2}
-          numItemsMd={4}
-          numItemsLg={6}
-          numItemsSm={2}
-          className="gap-3 mt-6"
+        <div
+          className="lg:grid grid-cols-6 gap-3 mt-6"
         >
           <Col numColSpan={2}>
             <Text>Title</Text>
@@ -71,9 +98,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
             <Text>From</Text>
             <Link href={`/dashboard/users/${request.from.id}`}>
               <Button variant="light" className="py-2">
-                {`${request.from.first_name} ${request.from.last_name} - ${
-                  request.from.phone || request.from.email
-                }`}
+                {`${request.from.first_name} ${request.from.last_name}`}
               </Button>
             </Link>
           </Col>
@@ -95,9 +120,9 @@ const DashboardUpdateRequestPage = async ({ params }) => {
             </Text>
           </Col>
 
-          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
+          <Col numColSpan={2} numColSpanSm={2} numColSpanMd={4} numColSpanLg={6}>
             <Text>To</Text>
-            <Flex className="py-2 text-ellipsis overflow-hidden">
+            <Flex className="py-2 overflow-scroll">
               {respondGroupMembers.map((respondGroup) => (
                 <Badge key={respondGroup.group.id}>
                   {respondGroup.group.name} - {respondGroup.group.campus.name}
@@ -108,17 +133,19 @@ const DashboardUpdateRequestPage = async ({ params }) => {
               )}
             </Flex>
           </Col>
-          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
+          <Col numColSpan={2} numColSpanSm={2} numColSpanMd={4} numColSpanLg={6}>
             <Text>Description</Text>
-            <Text className="py-2 text-black whitespace-pre-wrap">{request.description}</Text>
+            <Text className="py-2 text-black whitespace-pre-wrap">
+              {request.description}
+            </Text>
           </Col>
           {request.media && <LoadMedia mediaId={request.media} />}
-          <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
+          <Col numColSpan={2} numColSpanSm={2} numColSpanMd={4} numColSpanLg={6} className="mt-6 lg:mt-0">
             <Flex justifyContent="end" className="gap-3 flex-wrap">
               <ChangeRequestStatus requestId={request.id} />
             </Flex>
           </Col>
-        </Grid>
+        </div>
       </Card>
       <Card className="mt-6">
         <Flex>

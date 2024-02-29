@@ -14,6 +14,7 @@ import {
   Select,
   SelectItem,
   Text,
+  TextInput,
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -42,8 +43,14 @@ const RequestFilters = ({ searchParams }) => {
 
   const [dateRange, setDateRange] = useState(defaultRangeState);
 
+  const [findId, setFindId] = useState(null)
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    if(findId){
+      router.replace("/dashboard/requests/" + findId);
+      return;
+    }
     const formData = new FormData(event.target);
     formData.set("date_range", JSON.stringify(dateRange));
     const queryString = new URLSearchParams(formData).toString();
@@ -54,6 +61,10 @@ const RequestFilters = ({ searchParams }) => {
     <Card className="mt-6">
       <form method="get" onSubmit={handleSubmit}>
         <Grid numItems={3} className="gap-3">
+        <Col numColSpan={3} numColSpanLg={3}>
+            <Text>Find by ID</Text>
+            <TextInput name="id" onChange={(e) => setFindId(e.target.value)} value={findId} />
+          </Col>
           <Col numColSpan={3} numColSpanLg={1}>
             <Text>Campus</Text>
             <Select name="campus" defaultValue={searchParams.campus}>
