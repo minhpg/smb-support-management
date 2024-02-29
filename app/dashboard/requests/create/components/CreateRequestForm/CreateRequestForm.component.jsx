@@ -31,24 +31,7 @@ import Link from "next/link";
 
 const CreateRequestForm = () => {
   const router = useRouter();
-  return (
-    <form
-      action={async (formData) => {
-        const response = await createRequestFormAction(formData);
-        if (response) {
-          router.replace("/dashboard/requests/" + response.data.id);
-        }
-      }}
-    >
-      <CreateRequestFormInternal />
-    </form>
-  );
-};
-
-const CreateRequestFormInternal = () => {
   const supabase = createClientComponentClient();
-
-  const { pending } = useFormStatus();
 
   const campuses = useCampuses(supabase);
 
@@ -56,30 +39,39 @@ const CreateRequestFormInternal = () => {
 
   const { previews, selectedFiles, onSelectFile } = usePreviews();
 
-  const [selectedCampus, setSelectedCampus] = useState("");
+  const [selectedCampus, setSelectedCampus] = useState(null);
 
-  console.log(selectedFiles)
+  const [selectedGroup, setSelectedGroup] = useState(null);
+
+  const [errorMessage, setErrorMessage] = useState(null);
 
   return (
-    <>
-      {pending && (
-        <>
-          <div className="fixed inset-0 bg-black/30 z-40" aria-hidden="true" />
-          <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
-            <ProgressCircle value={50} />
-          </div>
-        </>
-      )}
+    <form
+      action={async (formData) => {
+
+        if (!selectedGroup) {
+          setErrorMessage("Error: Group not selected!");
+          return;
+        }
+        if (!selectedCampus) {
+          setErrorMessage("Error: Campus not selected!");
+          return;
+        }
+
+        const response = await createRequestFormAction(formData);
+        if (response) {
+          router.replace("/dashboard/requests/" + response.data.id);
+        }
+      }}
+    >
       <Card>
         <Flex>
           <Title className="w-full">New Request</Title>
           <Flex className="gap-3" justifyContent="end">
-            <Button disabled={pending}>Submit</Button>
-            <Link href={"/dashboard/requests"}>
-              <Button color="red">Cancel</Button>
-            </Link>
+            <CreateRequestSubmitButton />
           </Flex>
         </Flex>
+        {errorMessage && <Text className="text-red-600 font-semibold">{errorMessage}</Text>}
         <Grid
           numItems={2}
           numItemsMd={4}
@@ -103,6 +95,9 @@ const CreateRequestFormInternal = () => {
               onChange={setSelectedCampus}
               value={selectedCampus}
             >
+              <SearchSelectItem disabled value="">
+                Select one
+              </SearchSelectItem>
               {campuses.length > 0 &&
                 campuses.map((campus) => (
                   <SearchSelectItem value={campus.id} key={campus.id}>
@@ -115,7 +110,12 @@ const CreateRequestFormInternal = () => {
             <Text>
               To<span className="text-red-500">*</span>
             </Text>
-            <SearchSelect name="to" required={true} defaultValue={""}>
+            <SearchSelect
+              name="to"
+              required={true}
+              value={selectedGroup}
+              onChange={setSelectedGroup}
+            >
               {selectedCampus &&
                 groups.map((group) => {
                   if (!group.campus) return null;
@@ -204,19 +204,53 @@ const CreateRequestFormInternal = () => {
               </Grid>
             </Col>
           )}
-          {
-            Array.from(selectedFiles)
-              .filter((selectedFile) => !selectedFile.type.includes("image"))
-              .map((selectedFile) => {
-                return (
-                  <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6} key={selectedFile.name}>
-                    <Button variant="light">{selectedFile.name}</Button>
-                  </Col>
-                );
-              })
-          }
+          {Array.from(selectedFiles)
+            .filter((selectedFile) => !selectedFile.type.includes("image"))
+            .map((selectedFile) => {
+              return (
+                <Col
+                  numColSpan={2}
+                  numColSpanMd={4}
+                  numColSpanLg={6}
+                  key={selectedFile.name}
+                >
+                  <Button variant="light">{selectedFile.name}</Button>
+                </Col>
+              );
+            })}
         </Grid>
       </Card>
+      {/* <CreateRequestPendingProgress /> */}
+    </form>
+  );
+};
+
+const CreateRequestPendingProgress = () => {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      {pending && (
+        <>
+          <div className="fixed inset-0 bg-black/30 z-40" aria-hidden="true" />
+          <div className="fixed inset-0 flex w-screen items-center justify-center p-4 z-50">
+            <ProgressCircle value={50} />
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+const CreateRequestSubmitButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      <Button disabled={pending}>Submit</Button>
+      <Link href={"/dashboard/requests"}>
+        <Button color="red" disabled={pending}>
+          Cancel
+        </Button>
+      </Link>
     </>
   );
 };

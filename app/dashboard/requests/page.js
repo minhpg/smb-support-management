@@ -177,7 +177,7 @@ const RequestsTable = async ({ searchParams }) => {
               <TableRow key={request.id}>
                 <TableCell>
                   <Link href={`/dashboard/requests/${request.id}`}>
-                    <Button variant="light">{request.title}</Button>
+                    <Button variant="light">#{request.id} - {request.title}</Button>
                   </Link>
                 </TableCell>
                 <TableCell>
