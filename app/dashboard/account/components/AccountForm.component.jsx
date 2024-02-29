@@ -1,7 +1,6 @@
 "use client";
 
 import useCampuses from "@/hooks/useCampuses.hook";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,
@@ -15,9 +14,10 @@ import {
   Title,
 } from "@tremor/react";
 import { useState } from "react";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const AccountForm = ({ authUser, user }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
 
   const [saved, setSaved] = useState(true);
   const campuses = useCampuses(supabase);
@@ -34,7 +34,7 @@ const AccountForm = ({ authUser, user }) => {
     formData.forEach((value, key) => {
       formDataObj[key] = value.length > 0 ? value : null;
     });
-    
+
     await supabase.from("users").upsert(formDataObj);
     setSaved(true);
   };
@@ -74,6 +74,14 @@ const AccountForm = ({ authUser, user }) => {
                 defaultValue={user?.last_name}
               />
             </Col>
+            <Col numColSpan={2}>
+              <Text>Title</Text>
+              <TextInput
+                name="title"
+                type="text"
+                defaultValue={user?.title}
+              />
+            </Col>
             <Col numColSpan={2} numColSpanMd={3}>
               <Text>Email</Text>
               <TextInput
@@ -102,9 +110,9 @@ const AccountForm = ({ authUser, user }) => {
                 ))}
               </SearchSelect>
             </Col>
-            <Col numColSpan={2}  numColSpanMd={4} numColSpanLg={6}>
+            <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
               <Flex justifyContent="end">
-              <Button>Save</Button>
+                <Button>Save</Button>
               </Flex>
             </Col>
           </Grid>

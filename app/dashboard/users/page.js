@@ -26,6 +26,7 @@ const DashboardUsersPage = async () => {
           <TableHead>
             <TableRow>
               <TableHeaderCell>Name</TableHeaderCell>
+              <TableHeaderCell>Title</TableHeaderCell>
               <TableHeaderCell>Email</TableHeaderCell>
               <TableHeaderCell>Phone</TableHeaderCell>
               <TableHeaderCell>Verified</TableHeaderCell>
@@ -48,6 +49,7 @@ const DashboardUsersPage = async () => {
                     )}
                   </Link>
                 </TableCell>
+                <TableCell>{user.title || "None"}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.phone}</TableCell>
                 <TableCell>

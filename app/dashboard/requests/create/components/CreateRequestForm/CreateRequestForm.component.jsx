@@ -19,7 +19,7 @@ import {
 } from "@tremor/react";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import useGroups from "@/hooks/useGroups.hook";
@@ -28,10 +28,12 @@ import usePreviews from "@/hooks/usePreviews.hook";
 
 import createRequestFormAction from "./createRequestFormAction";
 import Link from "next/link";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const CreateRequestForm = () => {
+  const { user, supabase } = useSupabaseContext()
+
   const router = useRouter();
-  const supabase = createClientComponentClient();
 
   const campuses = useCampuses(supabase);
 
@@ -44,6 +46,14 @@ const CreateRequestForm = () => {
   const [selectedGroup, setSelectedGroup] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState(null);
+
+  useEffect(() => {
+    if(user){
+      if(user.campus){
+        setSelectedCampus(user.campus.id)
+      }
+    }
+  }, [user])
 
   return (
     <form
@@ -85,7 +95,7 @@ const CreateRequestForm = () => {
             </Text>
             <TextInput name="title" type="text" required />
           </Col>
-          <Col numColSpan={2}>
+          <Col numColSpan={2} className={user?.campus && "hidden"}>
             <Text>
               Campus<span className="text-red-500">*</span>
             </Text>

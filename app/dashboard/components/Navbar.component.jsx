@@ -1,18 +1,83 @@
 "use client";
 
 import { Button, Flex } from "@tremor/react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import Link from "next/link";
 
 import Logo from "./Logo.component";
 import NavbarDialog from "./NavbarDialog.component";
-import useNavbar from "@/hooks/useNavbar.hook";
+import { useSupabaseContext } from "../contexts/SupabaseClient.context";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
-  const supabase = createClientComponentClient();
+  const { user } = useSupabaseContext();
+  const [navbarItems, setNavbarItems] = useState([]);
 
-  const { user, navbarItems } = useNavbar(supabase);
+  useEffect(() => {
+
+    console.log(user)
+    
+    if (!user) {
+      return;
+    }
+
+    if (user.role && user.verified) {
+      if (user.role.permission_level == "USER") {
+        setNavbarItems([
+          {
+            title: "Requests",
+            path: "/dashboard/requests",
+          },
+        ]);
+      }
+
+      if (user.role.permission_level == "MODERATOR") {
+        setNavbarItems([
+          {
+            title: "Requests",
+            path: "/dashboard/requests",
+          },
+          {
+            title: "Approvals",
+            path: "/dashboard/approvals",
+          },
+        ]);
+      }
+
+      if (user.role.permission_level == "ADMIN") {
+        setNavbarItems([
+          {
+            title: "Dashboard",
+            path: "/dashboard",
+          },
+          {
+            title: "Groups",
+            path: "/dashboard/groups",
+          },
+          {
+            title: "Campuses",
+            path: "/dashboard/campuses",
+          },
+          {
+            title: "Requests",
+            path: "/dashboard/requests",
+          },
+          {
+            title: "Approvals",
+            path: "/dashboard/approvals",
+          },
+          {
+            title: "Update Types",
+            path: "/dashboard/update-types",
+          },
+          {
+            title: "Users",
+            path: "/dashboard/users",
+          },
+        ]);
+      }
+    }
+  }, [user]);
 
   return (
     <>
