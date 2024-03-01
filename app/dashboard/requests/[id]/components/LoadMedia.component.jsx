@@ -18,8 +18,6 @@ const LoadMedia = ({ mediaId }) => {
       .select("*")
       .eq("media", mediaId);
 
-    console.log(mediaFiles);
-
     if (mediaFiles) {
       const loadedImages = await Promise.all(
         mediaFiles
@@ -39,7 +37,6 @@ const LoadMedia = ({ mediaId }) => {
             const { data, error } = await supabase.storage
               .from("media")
               .createSignedUrl(mediaFile.path, 36000);
-            console.log(data, error);
             return {
               url: data.signedUrl,
               name: mediaFile.name,

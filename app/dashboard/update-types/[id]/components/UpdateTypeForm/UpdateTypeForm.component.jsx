@@ -180,7 +180,6 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
   useEffect(() => {
     let query = supabase.from("groups").select("*, campus (name)");
     if (campusId) {
-      console.log(campusId);
       query.eq("campus", campusId);
     }
 
