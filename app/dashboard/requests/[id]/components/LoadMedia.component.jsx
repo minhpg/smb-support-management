@@ -10,7 +10,7 @@ const LoadMedia = ({ mediaId }) => {
   const [images, setImages] = useState([]);
   const [docs, setDocs] = useState([]);
 
-  const supabase = useSupabaseContext();
+  const { supabase } = useSupabaseContext();
 
   const loadMediaAsync = async () => {
     const { data: mediaFiles } = await supabase

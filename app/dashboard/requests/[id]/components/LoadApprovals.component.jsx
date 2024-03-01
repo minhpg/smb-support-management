@@ -3,14 +3,14 @@
 import { Table, TableBody, TableCell, TableRow, Text } from "@tremor/react";
 import { useEffect, useState } from "react";
 
-import ApprovalStatus from '../../components/ApprovalStatus.component'
+import ApprovalStatus from "../../components/ApprovalStatus.component";
 import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const LoadApprovals = ({ updateId }) => {
   const [loading, setLoading] = useState(true);
   const [approvals, setApprovals] = useState([]);
 
-  const {supabase} = useSupabaseContext();
+  const { supabase } = useSupabaseContext();
 
   useEffect(() => {
     const loadItemsAsync = async () => {

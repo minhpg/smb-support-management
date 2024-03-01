@@ -61,10 +61,10 @@ const GroupForm = ({ group }) => {
     // check against existing group members
     if (groupMembers) {
       const deletedMemberIds = groupUsers.filter(
-        (user) => !groupMembers.includes(user)
+        (user) => !groupMembers.includes(user),
       );
       const addedMemberIds = groupMembers.filter(
-        (user) => !groupUsers.includes(user)
+        (user) => !groupUsers.includes(user),
       );
 
       addedMemberIds.map(async (memberId) => {

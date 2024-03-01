@@ -12,7 +12,7 @@ import RequestFilters from "./components/RequestFilters.component";
 
 const DashboardPage = async ({ searchParams }) => {
   const { supabase } = await getSession();
-  
+
   return (
     <>
       <Flex>
@@ -23,63 +23,64 @@ const DashboardPage = async ({ searchParams }) => {
         <StatisticsBody supabase={supabase} searchParams={searchParams} />
       </Suspense>
       <Suspense fallback={<LoadingCard />}>
-        <LatestPendingRequestsTable supabase={supabase} searchParams={searchParams}/>
+        <LatestPendingRequestsTable
+          supabase={supabase}
+          searchParams={searchParams}
+        />
       </Suspense>
       <Suspense fallback={<LoadingCard />}>
-        <LateUpdatesTable supabase={supabase} searchParams={searchParams}/>
+        <LateUpdatesTable supabase={supabase} searchParams={searchParams} />
       </Suspense>
     </>
   );
 };
 
 const StatisticsBody = async ({ supabase, searchParams }) => {
+  let respondGroups = [];
 
-  let respondGroups = []
-
-  if(searchParams.group){
+  if (searchParams.group) {
     let respondGroupData = await supabase
-    .from("respond_group_members")
-    .select("respond_group")
-    .eq("group", searchParams.group);
-    respondGroups = respondGroupData.data
+      .from("respond_group_members")
+      .select("respond_group")
+      .eq("group", searchParams.group);
+    respondGroups = respondGroupData.data;
   }
 
   const buildQuery = (params) => {
-    
     let query = supabase
-    .from("requests")
-    .select("*", { count: "exact", head: true })
-  
+      .from("requests")
+      .select("*", { count: "exact", head: true });
+
     if (searchParams.campus) {
       query.eq("campus", searchParams.campus);
     }
-    
+
     if (searchParams.group) {
       if (respondGroups.length > 0) {
         query = query.or(
           `to.in.(${respondGroups
             .map(({ respond_group }) => respond_group)
-            .join(",")})`
+            .join(",")})`,
         );
       }
     }
-  
+
     if (searchParams.date_range) {
       const { from, to } = JSON.parse(searchParams.date_range);
-  
+
       if (from) {
         let fromDate = new Date(from);
         fromDate.setDate(fromDate.getDate() - 1);
         query.gte("created_at", fromDate.toISOString());
       }
-  
+
       if (to) {
         let toDate = new Date(to);
         toDate.setDate(toDate.getDate() + 1);
         query.lte("created_at", toDate.toISOString());
       }
     }
-  
+
     if (searchParams.status) {
       if (searchParams.status == "pending") {
         query.eq("completed", false).eq("rejected", false);
@@ -91,43 +92,40 @@ const StatisticsBody = async ({ supabase, searchParams }) => {
         query.eq("completed", false).eq("rejected", true);
       }
     }
-  
+
     if (searchParams.priority) {
       query.eq("priority", searchParams.priority);
     }
-  
+
     if (searchParams.created_by) {
       query.eq("from", searchParams.created_by);
     }
-  
-    if(params) {
-      const {
-        completed,
-        rejected
-      } = params
-      query.eq("completed", completed)
-      query.eq("rejected", rejected);  
+
+    if (params) {
+      const { completed, rejected } = params;
+      query.eq("completed", completed);
+      query.eq("rejected", rejected);
     }
 
-    return query
-  }
+    return query;
+  };
 
-  const { count: totalRequestCount } = await buildQuery()
+  const { count: totalRequestCount } = await buildQuery();
 
   const { count: totalPendingCount } = await buildQuery({
     completed: false,
-    rejected: false
-  })
+    rejected: false,
+  });
 
   const { count: totalRejectedCount } = await buildQuery({
     completed: false,
-    rejected: true
-  })
+    rejected: true,
+  });
 
   const { count: totalCompletedCount } = await await buildQuery({
     completed: true,
-    rejected: false
-  })
+    rejected: false,
+  });
 
   const colors = ["blue", "red", "green"];
 

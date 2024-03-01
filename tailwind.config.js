@@ -1,10 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", 
-  "./node_modules/@tremor/**/*.{js,ts,jsx,tsx,mdx}",
-  "./node_modules/@react-email/**/*.{js,ts,jsx,tsx,mdx}",
-],
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@tremor/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@react-email/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   darkMode: "class",
   theme: {
     transparent: "transparent",

@@ -28,7 +28,7 @@ const ApprovalRow = ({ approval }) => {
   const update = approval.update;
   const request = update.request;
 
-  const {supabase} = useSupabaseContext();
+  const { supabase } = useSupabaseContext();
 
   const handleReject = async () => {
     await supabase

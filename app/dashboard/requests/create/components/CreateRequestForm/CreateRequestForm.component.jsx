@@ -29,7 +29,7 @@ import Link from "next/link";
 import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const CreateRequestForm = () => {
-  const { user, supabase } = useSupabaseContext()
+  const { user, supabase } = useSupabaseContext();
 
   const router = useRouter();
 
@@ -46,17 +46,16 @@ const CreateRequestForm = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    if(user){
-      if(user.campus){
-        setSelectedCampus(user.campus.id)
+    if (user) {
+      if (user.campus) {
+        setSelectedCampus(user.campus.id);
       }
     }
-  }, [user])
+  }, [user]);
 
   return (
     <form
       action={async (formData) => {
-
         if (!selectedGroup) {
           setErrorMessage("Error: Group not selected!");
           return;
@@ -79,7 +78,9 @@ const CreateRequestForm = () => {
             <CreateRequestSubmitButton />
           </Flex>
         </Flex>
-        {errorMessage && <Text className="text-red-600 font-semibold">{errorMessage}</Text>}
+        {errorMessage && (
+          <Text className="text-red-600 font-semibold">{errorMessage}</Text>
+        )}
         <Grid
           numItems={2}
           numItemsMd={4}
@@ -205,7 +206,11 @@ const CreateRequestForm = () => {
                       justifyContent="center"
                       className="h-full"
                     >
-                      <img src={preview} className="w-full rounded-xl" />
+                      <img
+                        src={preview}
+                        className="w-full rounded-xl"
+                        alt={`preview-${index}`}
+                      />
                     </Flex>
                   </Col>
                 ))}

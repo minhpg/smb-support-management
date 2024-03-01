@@ -32,7 +32,7 @@ const ApprovalsBody = async ({ searchParams }) => {
   let query = supabase
     .from("update_approvals")
     .select(
-      "*, update(*, request(*, to, from(id, first_name, last_name, email, phone), campus (id, name)), update_type (*), created_by (*)), group (*, campus(*))"
+      "*, update(*, request(*, to, from(id, first_name, last_name, email, phone), campus (id, name)), update_type (*), created_by (*)), group (*, campus(*))",
     )
     .is("update.request.completed", false)
     .is("update.request.rejected", false);

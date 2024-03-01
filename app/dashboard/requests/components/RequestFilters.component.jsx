@@ -21,7 +21,7 @@ import useUsers from "@/hooks/useUsers.hook";
 import { useSupabaseContext } from "../../contexts/SupabaseClient.context";
 
 const RequestFilters = ({ searchParams }) => {
-  const {supabase} = useSupabaseContext();
+  const { supabase } = useSupabaseContext();
   const { groups } = useGroups(supabase);
   const { users } = useUsers(supabase);
   const campuses = useCampuses(supabase);
@@ -43,11 +43,11 @@ const RequestFilters = ({ searchParams }) => {
 
   const [dateRange, setDateRange] = useState(defaultRangeState);
 
-  const [findId, setFindId] = useState(null)
+  const [findId, setFindId] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if(findId){
+    if (findId) {
       router.replace("/dashboard/requests/" + findId);
       return;
     }
@@ -61,9 +61,13 @@ const RequestFilters = ({ searchParams }) => {
     <Card className="mt-6">
       <form method="get" onSubmit={handleSubmit}>
         <Grid numItems={3} className="gap-3">
-        <Col numColSpan={3} numColSpanLg={3}>
+          <Col numColSpan={3} numColSpanLg={3}>
             <Text>Find by ID</Text>
-            <TextInput name="id" onChange={(e) => setFindId(e.target.value)} value={findId} />
+            <TextInput
+              name="id"
+              onChange={(e) => setFindId(e.target.value)}
+              value={findId}
+            />
           </Col>
           <Col numColSpan={3} numColSpanLg={1}>
             <Text>Campus</Text>

@@ -13,7 +13,7 @@ import {
 import { useSupabaseContext } from "../../contexts/SupabaseClient.context";
 
 const ApprovalFilters = ({ searchParams }) => {
-  const {supabase} = useSupabaseContext();
+  const { supabase } = useSupabaseContext();
   const { groups } = useGroups(supabase);
 
   return (

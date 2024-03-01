@@ -127,7 +127,7 @@ const uploadImages = async (supabase, files) => {
 
     // Upload to bucket
     const response = await supabase.storage.from("media").upload(path, file);
-    console.log(response)
+    console.log(response);
 
     // Register media items
     await supabase.from("media_items").insert({

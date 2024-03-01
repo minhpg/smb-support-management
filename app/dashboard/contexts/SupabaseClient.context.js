@@ -22,7 +22,7 @@ const SupabaseContextProvider = ({ children }) => {
         }
       }
     });
-  }, []);
+  }, [supabase]);
 
   const data = {
     supabase,

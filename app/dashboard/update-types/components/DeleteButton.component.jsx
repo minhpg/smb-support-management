@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSupabaseContext } from "../../contexts/SupabaseClient.context";
 
 const DeleteButton = ({ updateTypeId }) => {
-  const {supabase} = useSupabaseContext();
+  const { supabase } = useSupabaseContext();
   const router = useRouter();
 
   const handleDelete = async () => {

@@ -30,7 +30,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
   const { data: request, error } = await supabase
     .from("requests")
     .select(
-      "*, from(id, first_name, last_name, email, phone), campus (id, name)"
+      "*, from(id, first_name, last_name, email, phone), campus (id, name)",
     )
     .eq("id", params.id)
     .single();
@@ -181,10 +181,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
         </Flex>
         <div className="mt-6">
           <Suspense fallback={<Loading />}>
-            <LoadUpdate
-              supabase={supabase}
-              request={request}
-            />
+            <LoadUpdate supabase={supabase} request={request} />
           </Suspense>
         </div>
       </Card>

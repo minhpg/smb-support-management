@@ -1,3 +1,3 @@
 import UpdateTypeForm from "./UpdateTypeForm.component";
 
-export default UpdateTypeForm
+export default UpdateTypeForm;

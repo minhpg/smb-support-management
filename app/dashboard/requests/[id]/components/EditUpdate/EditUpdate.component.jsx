@@ -81,7 +81,7 @@ const useEditUpdate = (supabase) => {
     formData.append("text", text);
     formData.append(
       "deadline",
-      deadline ? deadline.toISOString().replace("T", " ").replace("Z", "") : ""
+      deadline ? deadline.toISOString().replace("T", " ").replace("Z", "") : "",
     );
     formData.append("equipment_request", attachRequestItems);
 
@@ -149,7 +149,7 @@ const EditUpdate = ({ update }) => {
   useEffect(() => {
     setSelectedType(update.update_type.id);
     setText(update.text);
-  }, []);
+  }, [update, setSelectedType, setText]);
 
   useEffect(() => {
     setMediaFiles(selectedFiles);

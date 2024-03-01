@@ -16,7 +16,7 @@ const ProgressGraph = ({ searchParams }) => {
       let d = new Date();
       d.setDate(d.getDate() - 30);
       const timestampDeductedWeek = new Date(
-        d + 1000 * 60 * -new Date().getTimezoneOffset()
+        d + 1000 * 60 * -new Date().getTimezoneOffset(),
       )
         .toISOString()
         .replace("T", " ")
@@ -47,7 +47,7 @@ const ProgressGraph = ({ searchParams }) => {
           query = query.or(
             `to.in.(${respondGroups
               .map(({ respond_group }) => respond_group)
-              .join(",")})`
+              .join(",")})`,
           );
         }
       }
@@ -126,7 +126,7 @@ const ProgressGraph = ({ searchParams }) => {
         const completedCount = value.filter((item) => item.completed).length;
         const rejectedCount = value.filter((item) => item.rejected).length;
         const pendingCount = value.filter(
-          (item) => !item.completed && !item.rejected
+          (item) => !item.completed && !item.rejected,
         ).length;
         aggregatedDataset.push({
           date: key,

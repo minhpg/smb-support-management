@@ -74,11 +74,10 @@ const RequestsTable = async ({ searchParams }) => {
       query = query.or(
         `to.in.(${respondGroups
           .map(({ respond_group }) => respond_group)
-          .join(",")}), from.eq.${escape(user.id)}`
+          .join(",")}), from.eq.${escape(user.id)}`,
       );
-    }
-    else {
-      query = query.eq('from', user.id)
+    } else {
+      query = query.eq("from", user.id);
     }
   }
 
@@ -93,7 +92,7 @@ const RequestsTable = async ({ searchParams }) => {
         query = query.or(
           `to.in.(${respondGroups
             .map(({ respond_group }) => respond_group)
-            .join(",")})`
+            .join(",")})`,
         );
       }
     }

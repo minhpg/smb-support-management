@@ -76,11 +76,7 @@ const AccountForm = ({ authUser, user }) => {
             </Col>
             <Col numColSpan={2}>
               <Text>Title</Text>
-              <TextInput
-                name="title"
-                type="text"
-                defaultValue={user?.title}
-              />
+              <TextInput name="title" type="text" defaultValue={user?.title} />
             </Col>
             <Col numColSpan={2} numColSpanMd={3}>
               <Text>Email</Text>

@@ -45,10 +45,7 @@ export async function middleware(req) {
         ? userProfile.role.permission_level
         : null;
 
-      const userAllowed = [
-        "/dashboard/requests",
-        "/dashboard/account",
-      ];
+      const userAllowed = ["/dashboard/requests", "/dashboard/account"];
       const moderatorAllowed = [
         "/dashboard/verified",
         "/dashboard/requests",
@@ -85,7 +82,7 @@ export async function middleware(req) {
 
       if (!allowedFlag) {
         return NextResponse.redirect(
-          new URL("/dashboard/unauthorized", req.url)
+          new URL("/dashboard/unauthorized", req.url),
         );
       }
     }

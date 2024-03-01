@@ -12,14 +12,16 @@ const AuthForm = () => {
     <div className="flex flex-col h-screen justify-center w-screen">
       <div className="flex justify-center w-full">
         <div>
-          <div className="flex w-full justify-center"><Logo /></div>
+          <div className="flex w-full justify-center">
+            <Logo />
+          </div>
           <Auth
             supabaseClient={supabase}
             view="magic_link"
             appearance={{ theme: ThemeSupa }}
             theme="light"
             showLinks={false}
-            providers={['azure']}
+            providers={["azure"]}
             redirectTo={`${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`}
           />
         </div>

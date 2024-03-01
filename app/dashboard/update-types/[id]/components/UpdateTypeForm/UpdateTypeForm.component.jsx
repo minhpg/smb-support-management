@@ -25,11 +25,10 @@ import useCampuses from "@/hooks/useCampuses.hook";
 import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const UpdateTypeForm = ({ updateType: initUpdateType }) => {
-
   const [updateType, setUpdateType] = useState(initUpdateType);
   const [saved, setSaved] = useState(true);
-  
-  const {supabase} = useSupabaseContext();
+
+  const { supabase } = useSupabaseContext();
   const campuses = useCampuses(supabase);
 
   const [campus, setCampus] = useState(initUpdateType.campus);
@@ -42,9 +41,8 @@ const UpdateTypeForm = ({ updateType: initUpdateType }) => {
     <>
       <form
         action={async (formData) => {
-          const { data: newUpdateType } = await updateUpdateTypeFormAction(
-            formData
-          );
+          const { data: newUpdateType } =
+            await updateUpdateTypeFormAction(formData);
           setUpdateType(newUpdateType);
           setSaved(true);
         }}
@@ -180,12 +178,10 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
   const [saved, setSaved] = useState(true);
 
   useEffect(() => {
-    let query = supabase
-    .from("groups")
-    .select("*, campus (name)")
-    if(campusId){
-      console.log(campusId)
-      query.eq('campus', campusId)
+    let query = supabase.from("groups").select("*, campus (name)");
+    if (campusId) {
+      console.log(campusId);
+      query.eq("campus", campusId);
     }
 
     query.then(({ data }) => {
@@ -205,26 +201,28 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
           const approveGroups = data.map((group) => group.group);
           const approveIds = approveGroups.map((group) => group.id);
           const availableGroupsFiltered = availableGroups.filter(
-            (x) => !approveIds.includes(x.id)
+            (x) => !approveIds.includes(x.id),
           );
           setAvailableGroups(availableGroupsFiltered);
           setSelectedGroups(approveGroups);
         });
     }
-  }, [groupsLoading, updateTypeId]);
+  }, [availableGroups, supabase, groupsLoading, updateTypeId]);
 
   const handleAddGroup = (group) => {
     setSaved(false);
     setSelectedGroups([...selectedGroups, group]);
     setAvailableGroups(
-      availableGroups.filter((availableGroup) => availableGroup.id !== group.id)
+      availableGroups.filter(
+        (availableGroup) => availableGroup.id !== group.id,
+      ),
     );
   };
 
   const handleDeleteGroup = (group) => {
     setSaved(false);
     setSelectedGroups(
-      selectedGroups.filter((selectedGroup) => selectedGroup.id !== group.id)
+      selectedGroups.filter((selectedGroup) => selectedGroup.id !== group.id),
     );
     setAvailableGroups([...availableGroups, group]);
   };

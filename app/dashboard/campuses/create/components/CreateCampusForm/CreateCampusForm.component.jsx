@@ -13,7 +13,6 @@ import {
 import createCampusFormAction from "./createCampusFormAction";
 
 const CreateCampusForm = () => {
-
   return (
     <>
       <form action={createCampusFormAction}>

@@ -14,7 +14,6 @@ const Navbar = () => {
   const [navbarItems, setNavbarItems] = useState([]);
 
   useEffect(() => {
-    
     if (!user) {
       return;
     }

@@ -19,7 +19,7 @@ import Link from "next/link";
 import DateFormat from "../../../components/DateFormat.component";
 
 const LoadUpdate = async ({ supabase, request }) => {
-  const requestLocked = request.completed || request.rejected
+  const requestLocked = request.completed || request.rejected;
   const { data: updates } = await supabase
     .from("updates")
     .select("*, update_type (*), created_by (*)")

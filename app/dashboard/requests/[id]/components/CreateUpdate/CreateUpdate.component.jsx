@@ -81,7 +81,7 @@ const useCreateUpdate = (supabase, requestId) => {
     formData.append("text", text);
     formData.append(
       "deadline",
-      deadline ? deadline.toISOString().replace("T", " ").replace("Z", "") : ""
+      deadline ? deadline.toISOString().replace("T", " ").replace("Z", "") : "",
     );
     formData.append("equipment_request", attachRequestItems);
 
@@ -121,7 +121,7 @@ const useCreateUpdate = (supabase, requestId) => {
 };
 
 const CreateUpdate = ({ requestId, campusId }) => {
-  const {supabase} = useSupabaseContext();
+  const { supabase } = useSupabaseContext();
   const types = useUpdateTypes(supabase, campusId);
 
   const {
@@ -266,7 +266,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
                         {Array.from(selectedFiles)
                           .filter(
                             (selectedFile) =>
-                              !selectedFile.type.includes("image")
+                              !selectedFile.type.includes("image"),
                           )
                           .map((selectedFile) => {
                             return (
