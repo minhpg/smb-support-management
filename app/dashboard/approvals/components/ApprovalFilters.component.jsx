@@ -1,6 +1,5 @@
 "use client";
 import useGroups from "@/hooks/useGroups.hook";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,
@@ -11,9 +10,10 @@ import {
   SelectItem,
   Text,
 } from "@tremor/react";
+import { useSupabaseContext } from "../../contexts/SupabaseClient.context";
 
 const ApprovalFilters = ({ searchParams }) => {
-  const supabase = createClientComponentClient();
+  const {supabase} = useSupabaseContext();
   const { groups } = useGroups(supabase);
 
   return (

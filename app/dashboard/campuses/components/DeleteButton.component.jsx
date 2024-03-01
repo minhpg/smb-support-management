@@ -1,11 +1,11 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 import { Button } from "@tremor/react";
 import { useRouter } from "next/navigation";
 
 const DeleteButton = ({ campusId }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
   const router = useRouter();
 
   const handleDelete = async () => {

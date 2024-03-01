@@ -1,7 +1,7 @@
 "use client";
 import useCampuses from "@/hooks/useCampuses.hook";
 import useGroups from "@/hooks/useGroups.hook";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 import {
   Button,
   Card,
@@ -20,7 +20,7 @@ import { useState } from "react";
 // import useUsers from "@/hooks/useUsers.hook";
 
 const RequestFilters = ({ searchParams }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
   const { groups } = useGroups(supabase);
   // const { users } = useUsers(supabase);
   const campuses = useCampuses(supabase);
@@ -39,7 +39,6 @@ const RequestFilters = ({ searchParams }) => {
       to: to ? new Date(to) : null,
     };
   }
-
 
   const [dateRange, setDateRange] = useState(defaultRangeState);
 

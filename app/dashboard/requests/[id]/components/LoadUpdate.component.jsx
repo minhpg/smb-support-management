@@ -18,11 +18,12 @@ import UpdateActions from "./UpdateActions.component";
 import Link from "next/link";
 import DateFormat from "../../../components/DateFormat.component";
 
-const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
+const LoadUpdate = async ({ supabase, request }) => {
+  const requestLocked = request.completed || request.rejected
   const { data: updates } = await supabase
     .from("updates")
     .select("*, update_type (*), created_by (*)")
-    .eq("request", requestId)
+    .eq("request", request.id)
     .order("created_at", { ascending: true });
 
   if (updates.length == 0) {
@@ -38,7 +39,7 @@ const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
               <Flex>
                 <div>
                   {update.update_type.title} -{" "}
-                  <DateFormat date={update.created_at}/>
+                  <DateFormat date={update.created_at} />
                 </div>
                 {update.update_type.requires_deadline && (
                   <>
@@ -67,14 +68,16 @@ const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
                 <div className="mt-3">
                   <Text>Expected fulfill date</Text>
                   <Text className="text-black">
-                    <DateFormat date={update.deadline}/>
+                    <DateFormat date={update.deadline} />
                   </Text>
                 </div>
               )}
               {update.update_type.attach_text && (
                 <div className="mt-3">
                   <Text>Notes</Text>
-                  <Text className="text-black whitespace-pre-wrap">{update.text}</Text>
+                  <Text className="text-black whitespace-pre-wrap">
+                    {update.text}
+                  </Text>
                 </div>
               )}
               {update.update_type.requires_approval && (
@@ -87,9 +90,13 @@ const LoadUpdate = async ({ supabase, requestId, requestLocked }) => {
                 update.update_type.attach_existing_request_items) && (
                 <div className="mt-3">
                   <Text>Request items</Text>
-                  <LoadRequestItems
-                    equipmentRequestId={update.equipment_request}
-                  />
+                  {update.equipment_request ? (
+                    <LoadRequestItems
+                      equipmentRequestId={update.equipment_request}
+                    />
+                  ) : (
+                    <Text className="text-black py-2">No items attached!</Text>
+                  )}
                 </div>
               )}
               {update.update_type.attach_media && update.media && (

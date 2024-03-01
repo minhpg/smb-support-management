@@ -61,18 +61,25 @@ const RequestsTable = async ({ searchParams }) => {
       .select("group")
       .eq("user", user.id);
 
-    let respondGroupQuery = supabase
-      .from("respond_group_members")
-      .select("respond_group")
-      .or(groups.map(({ group }) => `group.eq.${group}`).join(","));
-    if (searchParams.group) respondGroupQuery.eq("group", searchParams.group);
-    const { data: respondGroups } = await respondGroupQuery;
+    if (groups.length > 0) {
+      let respondGroupQuery = supabase
+        .from("respond_group_members")
+        .select("respond_group")
+        .or(groups.map(({ group }) => `group.eq.${group}`).join(","));
 
-    query = query.or(
-      `to.in.(${respondGroups
-        .map(({ respond_group }) => respond_group)
-        .join(",")}), from.eq.${escape(user.id)}`
-    );
+      if (searchParams.group) respondGroupQuery.eq("group", searchParams.group);
+
+      const { data: respondGroups } = await respondGroupQuery;
+
+      query = query.or(
+        `to.in.(${respondGroups
+          .map(({ respond_group }) => respond_group)
+          .join(",")}), from.eq.${escape(user.id)}`
+      );
+    }
+    else {
+      query = query.eq('from', user.id)
+    }
   }
 
   if (permissionLevel == "ADMIN") {
@@ -177,7 +184,9 @@ const RequestsTable = async ({ searchParams }) => {
               <TableRow key={request.id}>
                 <TableCell>
                   <Link href={`/dashboard/requests/${request.id}`}>
-                    <Button variant="light">#{request.id} - {request.title}</Button>
+                    <Button variant="light">
+                      #{request.id} - {request.title}
+                    </Button>
                   </Link>
                 </TableCell>
                 <TableCell>

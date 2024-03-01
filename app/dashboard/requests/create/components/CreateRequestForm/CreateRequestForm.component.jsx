@@ -1,6 +1,4 @@
 "use client";
-
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,

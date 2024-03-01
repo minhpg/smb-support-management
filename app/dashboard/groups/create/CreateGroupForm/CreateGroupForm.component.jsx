@@ -2,7 +2,7 @@
 
 import useCampuses from "@/hooks/useCampuses.hook";
 import useUsers from "@/hooks/useUsers.hook";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 import {
   Button,
   Card,
@@ -24,7 +24,7 @@ import {
 import createGroupFormAction from "./createGroupFormAction";
 
 const CreateGroupForm = ({ user }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
 
   const campuses = useCampuses(supabase);
   const { users, loading: usersLoading } = useUsers(supabase);

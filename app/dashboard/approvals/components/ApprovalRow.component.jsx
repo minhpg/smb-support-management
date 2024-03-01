@@ -10,7 +10,6 @@ import {
   Title,
 } from "@tremor/react";
 import { useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -20,6 +19,7 @@ import LoadMedia from "@/app/dashboard/requests/[id]/components/LoadMedia.compon
 
 import { timeSince } from "@/utils";
 import DateFormat from "../../components/DateFormat.component";
+import { useSupabaseContext } from "../../contexts/SupabaseClient.context";
 
 const ApprovalRow = ({ approval }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -28,7 +28,7 @@ const ApprovalRow = ({ approval }) => {
   const update = approval.update;
   const request = update.request;
 
-  const supabase = createClientComponentClient();
+  const {supabase} = useSupabaseContext();
 
   const handleReject = async () => {
     await supabase
@@ -55,7 +55,7 @@ const ApprovalRow = ({ approval }) => {
       <TableRow>
         <TableCell>{update.update_type.title}</TableCell>
         <TableCell>
-          <DateFormat date={update.created_at}/>
+          <DateFormat date={update.created_at} />
         </TableCell>
         <TableCell>
           <Link href={`/dashboard/requests/${approval.update.request.id}`}>
@@ -123,7 +123,7 @@ const ApprovalRow = ({ approval }) => {
               <Col numColSpan={2}>
                 <Text>Created at</Text>
                 <Text className="py-2 text-black">
-                <DateFormat date={request.created_at}/>
+                  <DateFormat date={request.created_at} />
                   {timeSince(new Date(request.created_at))} ago)
                 </Text>
               </Col>
@@ -155,7 +155,7 @@ const ApprovalRow = ({ approval }) => {
                 <Col numColSpan={6}>
                   <Text>Expected fulfill date</Text>
                   <Text className="text-black py-2">
-                  <DateFormat date={update.deadline}/>
+                    <DateFormat date={update.deadline} />
                   </Text>
                 </Col>
               )}
@@ -169,9 +169,13 @@ const ApprovalRow = ({ approval }) => {
                 update.update_type.attach_existing_request_items) && (
                 <Col numColSpan={6}>
                   <Text>Request items</Text>
-                  <LoadRequestItems
-                    equipmentRequestId={update.equipment_request}
-                  />
+                  {update.equipment_request ? (
+                    <LoadRequestItems
+                      equipmentRequestId={update.equipment_request}
+                    />
+                  ) : (
+                    <Text className="text-black py-2">No items attached!</Text>
+                  )}
                 </Col>
               )}
               {update.update_type.attach_media && (

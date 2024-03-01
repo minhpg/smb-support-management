@@ -1,7 +1,6 @@
 "use client";
 
 import { Dialog } from "@headlessui/react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,
@@ -25,8 +24,8 @@ import { useEffect, useState } from "react";
 import useUpdateTypes from "@/hooks/useUpdateTypes.hook";
 import usePreviews from "@/hooks/usePreviews.hook";
 import createUpdateFormAction from "./createUpdateFormAction";
-import { useRouter } from "next/navigation";
-import { useFormStatus } from 'react-dom'
+import { useFormStatus } from "react-dom";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const useCreateUpdate = (supabase, requestId) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +38,7 @@ const useCreateUpdate = (supabase, requestId) => {
   const [deadline, setDeadline] = useState(null);
   const [attachRequestItems, setAttachRequestItems] = useState([]);
 
-  const { pending } = useFormStatus()
+  const { pending } = useFormStatus();
 
   useEffect(() => {
     if (selectedType) {
@@ -97,7 +96,6 @@ const useCreateUpdate = (supabase, requestId) => {
     setDeadline(null);
     setAttachRequestItems([]);
     setIsOpen(false);
-
   };
 
   return {
@@ -118,12 +116,12 @@ const useCreateUpdate = (supabase, requestId) => {
     setAttachRequestItems,
     isOpen,
     setIsOpen,
-    pending
+    pending,
   };
 };
 
 const CreateUpdate = ({ requestId, campusId }) => {
-  const supabase = createClientComponentClient();
+  const {supabase} = useSupabaseContext();
   const types = useUpdateTypes(supabase, campusId);
 
   const {
@@ -143,7 +141,7 @@ const CreateUpdate = ({ requestId, campusId }) => {
     setAttachRequestItems,
     isOpen,
     setIsOpen,
-    pending
+    pending,
   } = useCreateUpdate(supabase, requestId);
 
   const { previews, onSelectFile, selectedFiles } = usePreviews();
@@ -265,17 +263,20 @@ const CreateUpdate = ({ requestId, campusId }) => {
                             </Grid>
                           </Col>
                         )}
-                                  {
-            Array.from(selectedFiles)
-              .filter((selectedFile) => !selectedFile.type.includes("image"))
-              .map((selectedFile) => {
-                return (
-                  <Col numColSpan={2} key={selectedFile.name}>
-                    <Button variant="light">{selectedFile.name}</Button>
-                  </Col>
-                );
-              })
-          }
+                        {Array.from(selectedFiles)
+                          .filter(
+                            (selectedFile) =>
+                              !selectedFile.type.includes("image")
+                          )
+                          .map((selectedFile) => {
+                            return (
+                              <Col numColSpan={2} key={selectedFile.name}>
+                                <Button variant="light">
+                                  {selectedFile.name}
+                                </Button>
+                              </Col>
+                            );
+                          })}
                       </>
                     )}
                     {updateType.attach_request_items && (
@@ -297,7 +298,9 @@ const CreateUpdate = ({ requestId, campusId }) => {
                 )}
                 <Col numColSpan={2}>
                   <Flex justifyContent="end">
-                    <Button onClick={handleSubmit} disabled={pending}>Submit</Button>
+                    <Button onClick={handleSubmit} disabled={pending}>
+                      Submit
+                    </Button>
                   </Flex>
                 </Col>
               </Grid>
@@ -389,7 +392,7 @@ const SelectRequestItemList = ({ requestId, setAttachRequestItems }) => {
   const [lists, setLists] = useState([]);
   const [list, setList] = useState(null);
 
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
 
   useEffect(() => {
     supabase

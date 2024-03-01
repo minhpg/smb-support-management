@@ -1,16 +1,11 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 import {
-  Col,
-  Flex,
-  Grid,
   NumberInput,
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeaderCell,
   TableRow,
   Text,
   TextInput,
@@ -21,7 +16,7 @@ const LoadRequestItems = ({ equipmentRequestId }) => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
 
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
 
   useEffect(() => {
     const loadItemsAsync = async () => {
@@ -40,13 +35,6 @@ const LoadRequestItems = ({ equipmentRequestId }) => {
       {loading && <Text>Loading...</Text>}
       {!loading && (
         <Table>
-          {/* <TableHead>
-            <TableRow>
-              <TableHeaderCell></TableHeaderCell>
-              <TableHeaderCell>Name</TableHeaderCell>
-              <TableHeaderCell>Amount</TableHeaderCell>
-            </TableRow>
-          </TableHead> */}
           <TableBody>
             {items.map((item, index) => (
               <TableRow key={index}>

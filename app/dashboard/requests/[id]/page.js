@@ -26,6 +26,7 @@ import { redirect } from "next/navigation";
 
 const DashboardUpdateRequestPage = async ({ params }) => {
   const { supabase, user } = await getUserProfile();
+
   const { data: request, error } = await supabase
     .from("requests")
     .select(
@@ -35,7 +36,10 @@ const DashboardUpdateRequestPage = async ({ params }) => {
     .single();
 
   let allowCreateUpdate = true;
+  let allowDeleteRequest = true;
+
   if (user.role.permission_level == "USER") allowCreateUpdate = false;
+  if (user.role.permission_level == "MODERATOR") allowDeleteRequest = false;
 
   if (!request) {
     return (
@@ -85,11 +89,9 @@ const DashboardUpdateRequestPage = async ({ params }) => {
             <Title>Request #{params.id}</Title>
             <RequestStatus task={request} />
           </Flex>
-          <DeleteButton requestId={request.id} />
+          {allowDeleteRequest && <DeleteButton requestId={request.id} />}
         </Flex>
-        <div
-          className="lg:grid grid-cols-6 gap-3 mt-6"
-        >
+        <div className="lg:grid grid-cols-6 gap-3 mt-6">
           <Col numColSpan={2}>
             <Text>Title</Text>
             <Text className="py-2 text-black">{request.title}</Text>
@@ -120,7 +122,12 @@ const DashboardUpdateRequestPage = async ({ params }) => {
             </Text>
           </Col>
 
-          <Col numColSpan={2} numColSpanSm={2} numColSpanMd={4} numColSpanLg={6}>
+          <Col
+            numColSpan={2}
+            numColSpanSm={2}
+            numColSpanMd={4}
+            numColSpanLg={6}
+          >
             <Text>To</Text>
             <Flex className="py-2 overflow-scroll">
               {respondGroupMembers.map((respondGroup) => (
@@ -133,14 +140,25 @@ const DashboardUpdateRequestPage = async ({ params }) => {
               )}
             </Flex>
           </Col>
-          <Col numColSpan={2} numColSpanSm={2} numColSpanMd={4} numColSpanLg={6}>
+          <Col
+            numColSpan={2}
+            numColSpanSm={2}
+            numColSpanMd={4}
+            numColSpanLg={6}
+          >
             <Text>Description</Text>
             <Text className="py-2 text-black whitespace-pre-wrap">
               {request.description}
             </Text>
           </Col>
           {request.media && <LoadMedia mediaId={request.media} />}
-          <Col numColSpan={2} numColSpanSm={2} numColSpanMd={4} numColSpanLg={6} className="mt-6 lg:mt-0">
+          <Col
+            numColSpan={2}
+            numColSpanSm={2}
+            numColSpanMd={4}
+            numColSpanLg={6}
+            className="mt-6 lg:mt-0"
+          >
             <Flex justifyContent="end" className="gap-3 flex-wrap">
               <ChangeRequestStatus requestId={request.id} />
             </Flex>
@@ -165,8 +183,7 @@ const DashboardUpdateRequestPage = async ({ params }) => {
           <Suspense fallback={<Loading />}>
             <LoadUpdate
               supabase={supabase}
-              requestId={request.id}
-              requestLocked={request.completed || request.rejected}
+              request={request}
             />
           </Suspense>
         </div>

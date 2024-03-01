@@ -1,30 +1,20 @@
 "use client";
 
-import useCampuses from "@/hooks/useCampuses.hook";
-import useUsers from "@/hooks/useUsers.hook";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,
   Col,
   Flex,
   Grid,
-  SearchSelect,
-  SearchSelectItem,
   Text,
   TextInput,
   Title,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
 } from "@tremor/react";
 import { useState } from "react";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const CampusForm = ({ campus }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
 
   const [saved, setSaved] = useState(true);
 

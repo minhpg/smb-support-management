@@ -1,12 +1,12 @@
 "use client";
 
 import { getCurrentTimestampTZ } from "@/utils";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AreaChart, Card, Title } from "@tremor/react";
 import { useEffect, useState } from "react";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const ProgressGraph = ({ searchParams }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
   const [data, setData] = useState(null);
   const [aggreatedData, setAggregatedData] = useState([]);
 

@@ -1,16 +1,16 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Table, TableBody, TableCell, TableRow, Text } from "@tremor/react";
 import { useEffect, useState } from "react";
 
 import ApprovalStatus from '../../components/ApprovalStatus.component'
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const LoadApprovals = ({ updateId }) => {
   const [loading, setLoading] = useState(true);
   const [approvals, setApprovals] = useState([]);
 
-  const supabase = createClientComponentClient();
+  const {supabase} = useSupabaseContext();
 
   useEffect(() => {
     const loadItemsAsync = async () => {

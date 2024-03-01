@@ -1,14 +1,13 @@
 "use client";
 
 import { getCurrentTimestampTZ } from "@/utils";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button, Flex } from "@tremor/react";
 import { useRouter } from "next/navigation";
-import EditUpdate from './EditUpdate'
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const UpdateActions = ({ update, requestLocked }) => {
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  const { supabase, user } = useSupabaseContext();
 
   const markFulfilled = async () => {
     const resolved_at = getCurrentTimestampTZ();
@@ -28,18 +27,20 @@ const UpdateActions = ({ update, requestLocked }) => {
   };
 
   if (requestLocked) return <></>;
+
   return (
     <Flex className="mt-3 gap-3" justifyContent="space-between">
-      {/* <EditUpdate update={update} /> */}
-      <Flex justifyContent="end" className="w-full">
-      {update.update_type.requires_deadline && !update.fulfilled && (
-        <Button color="blue" onClick={markFulfilled}>
-          Mark as fulfilled
+      <Flex justifyContent="end" className="w-full gap-3">
+        {update.update_type.requires_deadline &&
+          !update.fulfilled &&
+          update.created_by.id !== user.id && (
+            <Button color="blue" onClick={markFulfilled}>
+              Mark as fulfilled
+            </Button>
+          )}
+        <Button color="red" onClick={handleDeleteUpdate}>
+          Delete
         </Button>
-      )}
-      <Button color="red" onClick={handleDeleteUpdate}>
-        Delete
-      </Button>
       </Flex>
     </Flex>
   );

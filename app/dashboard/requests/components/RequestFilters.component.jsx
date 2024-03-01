@@ -1,7 +1,6 @@
 "use client";
 import useCampuses from "@/hooks/useCampuses.hook";
 import useGroups from "@/hooks/useGroups.hook";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,
@@ -19,9 +18,10 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useUsers from "@/hooks/useUsers.hook";
+import { useSupabaseContext } from "../../contexts/SupabaseClient.context";
 
 const RequestFilters = ({ searchParams }) => {
-  const supabase = createClientComponentClient();
+  const {supabase} = useSupabaseContext();
   const { groups } = useGroups(supabase);
   const { users } = useUsers(supabase);
   const campuses = useCampuses(supabase);

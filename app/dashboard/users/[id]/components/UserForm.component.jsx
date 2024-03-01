@@ -1,8 +1,8 @@
 "use client";
 
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 import useCampuses from "@/hooks/useCampuses.hook";
 import useRoles from "@/hooks/useRoles.hook";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Badge,
   Button,
@@ -14,13 +14,12 @@ import {
   SearchSelectItem,
   Text,
   TextInput,
-  Title,
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const UserForm = ({ user }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
 
   const [saved, setSaved] = useState(true);
   const campuses = useCampuses(supabase);
@@ -107,11 +106,7 @@ const UserForm = ({ user }) => {
             </Col>
             <Col numColSpan={2}>
               <Text>Title</Text>
-              <TextInput
-                name="title"
-                type="text"
-                defaultValue={user?.title}
-              />
+              <TextInput name="title" type="text" defaultValue={user?.title} />
             </Col>
             <Col numColSpan={2} numColSpanMd={3}>
               <Text>Email</Text>

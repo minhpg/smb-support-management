@@ -1,7 +1,6 @@
 "use client";
 
 import { Dialog } from "@headlessui/react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,
@@ -25,7 +24,8 @@ import { useEffect, useState } from "react";
 import useUpdateTypes from "@/hooks/useUpdateTypes.hook";
 import usePreviews from "@/hooks/usePreviews.hook";
 import editUpdateFormAction from "./editUpdateFormAction";
-import { useFormStatus } from 'react-dom'
+import { useFormStatus } from "react-dom";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const useEditUpdate = (supabase) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,7 @@ const useEditUpdate = (supabase) => {
   const [deadline, setDeadline] = useState(null);
   const [attachRequestItems, setAttachRequestItems] = useState([]);
 
-  const { pending } = useFormStatus()
+  const { pending } = useFormStatus();
 
   useEffect(() => {
     if (selectedType) {
@@ -96,7 +96,6 @@ const useEditUpdate = (supabase) => {
     setDeadline(null);
     setAttachRequestItems([]);
     setIsOpen(false);
-
   };
 
   return {
@@ -117,12 +116,12 @@ const useEditUpdate = (supabase) => {
     setAttachRequestItems,
     isOpen,
     setIsOpen,
-    pending
+    pending,
   };
 };
 
 const EditUpdate = ({ update }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
   const types = useUpdateTypes(supabase);
 
   const {
@@ -142,17 +141,15 @@ const EditUpdate = ({ update }) => {
     setAttachRequestItems,
     isOpen,
     setIsOpen,
-    pending
+    pending,
   } = useEditUpdate(supabase);
 
   const { previews, onSelectFile, selectedFiles } = usePreviews();
 
-  console.log(update)
-
   useEffect(() => {
-    setSelectedType(update.update_type.id)
-    setText(update.text)
-  }, [])
+    setSelectedType(update.update_type.id);
+    setText(update.text);
+  }, []);
 
   useEffect(() => {
     setMediaFiles(selectedFiles);
@@ -293,7 +290,9 @@ const EditUpdate = ({ update }) => {
                 )}
                 <Col numColSpan={2}>
                   <Flex justifyContent="end">
-                    <Button onClick={handleSubmit} disabled={pending}>Submit</Button>
+                    <Button onClick={handleSubmit} disabled={pending}>
+                      Submit
+                    </Button>
                   </Flex>
                 </Col>
               </Grid>
@@ -385,7 +384,7 @@ const SelectRequestItemList = ({ requestId, setAttachRequestItems }) => {
   const [lists, setLists] = useState([]);
   const [list, setList] = useState(null);
 
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
 
   useEffect(() => {
     supabase

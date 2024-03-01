@@ -1,6 +1,5 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Button,
   Card,
@@ -23,11 +22,14 @@ import updateUpdateTypeFormAction from "./updateUpdateTypeFormAction";
 import updateUpdateTypeGroupsAction from "./updateUpdateTypeGroupsAction";
 import { useEffect, useState } from "react";
 import useCampuses from "@/hooks/useCampuses.hook";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 
 const UpdateTypeForm = ({ updateType: initUpdateType }) => {
+
   const [updateType, setUpdateType] = useState(initUpdateType);
   const [saved, setSaved] = useState(true);
-  const supabase = createClientComponentClient();
+  
+  const {supabase} = useSupabaseContext();
   const campuses = useCampuses(supabase);
 
   const [campus, setCampus] = useState(initUpdateType.campus);
@@ -178,14 +180,18 @@ const UpdateTypeFormEditGroup = ({ supabase, campusId, updateTypeId }) => {
   const [saved, setSaved] = useState(true);
 
   useEffect(() => {
-    supabase
-      .from("groups")
-      .select("*, campus (name)")
-      .or("campus.is.null" + (campusId ? ",campus.eq." + campusId : ""))
-      .then(({ data }) => {
-        if (data) setAvailableGroups(data);
-        setGroupsLoading(false);
-      });
+    let query = supabase
+    .from("groups")
+    .select("*, campus (name)")
+    if(campusId){
+      console.log(campusId)
+      query.eq('campus', campusId)
+    }
+
+    query.then(({ data }) => {
+      if (data) setAvailableGroups(data);
+      setGroupsLoading(false);
+    });
   }, [campusId, supabase]);
 
   useEffect(() => {

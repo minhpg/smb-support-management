@@ -2,7 +2,7 @@
 
 import useCampuses from "@/hooks/useCampuses.hook";
 import useGroupUsers from "@/hooks/useGroupUsers.hook";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
 import {
   Button,
   Card,
@@ -24,7 +24,7 @@ import {
 import { useState } from "react";
 
 const GroupForm = ({ group }) => {
-  const supabase = createClientComponentClient();
+  const { supabase } = useSupabaseContext();
 
   const [saved, setSaved] = useState(true);
   const campuses = useCampuses(supabase);
@@ -59,31 +59,32 @@ const GroupForm = ({ group }) => {
     const groupMembers = formDataObj["group_members[]"];
 
     // check against existing group members
-    if(groupMembers){
+    if (groupMembers) {
+      const deletedMemberIds = groupUsers.filter(
+        (user) => !groupMembers.includes(user)
+      );
+      const addedMemberIds = groupMembers.filter(
+        (user) => !groupUsers.includes(user)
+      );
 
-      const deletedMemberIds = groupUsers.filter((user) => !groupMembers.includes(user))
-      const addedMemberIds = groupMembers.filter((user) => !groupUsers.includes(user))
-      
       addedMemberIds.map(async (memberId) => {
-          await supabase
-            .from("group_members")
-            .insert({
-              user: memberId,
-              group: group.id,
-            })
-            .select()
-            .single();
-        });
+        await supabase
+          .from("group_members")
+          .insert({
+            user: memberId,
+            group: group.id,
+          })
+          .select()
+          .single();
+      });
 
-
-        deletedMemberIds.map(async (memberId) => {
-          await supabase
-            .from("group_members")
-            .delete()
-            .eq('user', memberId)
-            .eq('group', group.id)
-        });
-
+      deletedMemberIds.map(async (memberId) => {
+        await supabase
+          .from("group_members")
+          .delete()
+          .eq("user", memberId)
+          .eq("group", group.id);
+      });
     }
 
     // console.log(groupMembers);
@@ -135,7 +136,7 @@ const GroupForm = ({ group }) => {
           </Col>
           <Col numColSpan={2} numColSpanMd={4} numColSpanLg={6}>
             <Flex justifyContent="end">
-            <Button>Submit</Button>
+              <Button>Submit</Button>
             </Flex>
           </Col>
         </Grid>

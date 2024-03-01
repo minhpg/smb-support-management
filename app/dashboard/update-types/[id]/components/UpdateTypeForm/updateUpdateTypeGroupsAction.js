@@ -12,6 +12,7 @@ const updateUpdateTypeGroupsAction = async (json) => {
     .from("approve_groups")
     .select("group")
     .eq("update_type", updateTypeId);
+
   const existingIds = data.map((item) => item.group);
   const updatingIds = selectedGroups.map((item) => item.group);
 

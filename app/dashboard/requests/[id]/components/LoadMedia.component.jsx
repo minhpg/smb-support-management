@@ -1,17 +1,16 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Button, Col, Flex, Grid, Text } from "@tremor/react";
-import Image from "next/image";
+import { useSupabaseContext } from "@/app/dashboard/contexts/SupabaseClient.context";
+import { Button, Col, Flex, Grid } from "@tremor/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const LoadMedia = ({ mediaId }) => {
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [docs, setDocs] = useState([]);
 
-  const supabase = createClientComponentClient();
+  const supabase = useSupabaseContext();
 
   const loadMediaAsync = async () => {
     const { data: mediaFiles } = await supabase
